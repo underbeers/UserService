@@ -1,0 +1,4 @@
+host: pgsql
+port: 5432
+name_db: user_service
+user_name: postgres
