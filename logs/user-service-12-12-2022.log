@@ -9,3 +9,9 @@
 {"level":"info","ts":"2022-12-12T19:02:35.840+0300","caller":"service/utils.go:37","msg":"It's debug mode"}
 {"level":"info","ts":"2022-12-12T19:02:35.847+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
 {"level":"info","ts":"2022-12-12T19:02:35.914+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0043941,"commandTag":"","pid":32}
+{"level":"info","ts":"2022-12-12T20:30:33.441+0300","caller":"service/utils.go:46","msg":"Lol, it's not debug mode"}
+{"level":"info","ts":"2022-12-12T20:30:33.449+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2022-12-12T20:30:33.472+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0011008,"commandTag":"","pid":77}
+{"level":"info","ts":"2022-12-12T20:31:40.114+0300","caller":"service/utils.go:37","msg":"It's debug mode"}
+{"level":"info","ts":"2022-12-12T20:31:40.123+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2022-12-12T20:31:40.146+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":79,"sql":";","args":[],"time":0.0013256}
