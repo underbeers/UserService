@@ -26,7 +26,7 @@ const (
 )
 
 func NewService(cfg *config.Config) *service {
-	logger := NewLogger(cfg.IsLocal)
+	logger := NewLogger(cfg.DebugMode)
 	srv := &service{Logger: logger, conf: cfg, router: mux.NewRouter()}
 	srv.registerHandlers()
 
@@ -72,8 +72,8 @@ func (srv *service) registerHandlers() {
 	srv.registerClientHandlers()
 }
 
-func (srv *service) IsLocalRunning() bool {
-	return srv.conf.IsLocal
+func (srv *service) DebugModeRunning() bool {
+	return srv.conf.DebugMode
 }
 
 func (srv *service) getRequestID(next http.Handler) http.Handler {
