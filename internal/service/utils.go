@@ -14,7 +14,7 @@ import (
 
 const logPermissions = 0o600
 
-func NewLogger(isLocal bool) *zap.SugaredLogger {
+func NewLogger(debugMode bool) *zap.SugaredLogger {
 	loggerConfig := zap.NewProductionEncoderConfig()
 	loggerConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	fileEncoder := zapcore.NewJSONEncoder(loggerConfig)
@@ -26,7 +26,7 @@ func NewLogger(isLocal bool) *zap.SugaredLogger {
 	}
 	writer := zapcore.AddSync(logFile)
 	defaultLogLevel := zapcore.DebugLevel
-	if isLocal {
+	if debugMode {
 		consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
 		core := zapcore.NewTee(
 			zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
@@ -34,6 +34,7 @@ func NewLogger(isLocal bool) *zap.SugaredLogger {
 		)
 		logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 		sugar := logger.Sugar()
+		sugar.Info("It's debug mode")
 
 		return sugar
 	}
@@ -42,6 +43,7 @@ func NewLogger(isLocal bool) *zap.SugaredLogger {
 	)
 	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	sugar := logger.Sugar()
+	sugar.Info("Lol, it's not debug mode")
 
 	return sugar
 }

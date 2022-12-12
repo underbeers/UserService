@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
+	"os"
 )
 
 type Config struct {
-	IsLocal   bool
+	DebugMode bool
 	DB        *DB
 	Listen    *Listen  `yaml:"listen"`
 	Gateway   *Gateway `yaml:"gateway"`
@@ -19,7 +20,7 @@ type DB struct {
 	Port       string `yaml:"port"`
 	NameDB     string `yaml:"name_db"`
 	UserName   string `yaml:"user_name"`
-	DBPassword string `env:"POSTGRES_PASSWORD" yaml:"password"`
+	DBPassword string `yaml:"password"`
 }
 
 type Listen struct {
@@ -50,32 +51,43 @@ func (db *DB) GetConnectionString() string {
 		db.UserName, db.DBPassword, db.Host, db.Port, db.NameDB)
 }
 
-func GetConfig(isLocal bool) *Config {
+func GetConfig(debugMode bool) *Config {
 	logger := log.Default()
 	logger.Print("Read application configuration")
-	instance := &Config{DB: &DB{}, IsLocal: isLocal}
+	instance := &Config{DB: &DB{}, DebugMode: debugMode}
 	if err := cleanenv.ReadConfig("./conf/config.yml", instance); err != nil {
 		help, _ := cleanenv.GetDescription(instance, nil)
 		logger.Print(help)
 		logger.Fatal(err)
 	}
 
-	confDBType := "docker"
-	if instance.IsLocal {
-		confDBType = "local"
-	}
-	if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/db/%s.yml", confDBType), instance.DB); err != nil {
-		help, _ := cleanenv.GetDescription(instance, nil)
-		logger.Print(help)
-		logger.Fatal(err)
-	}
+	if debugMode {
+		dbConfigName := "DBConfig"
+		if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/db/%s.yml", dbConfigName), instance.DB); err != nil {
+			help, _ := cleanenv.GetDescription(instance, nil)
+			logger.Print(help)
+			logger.Fatal(err)
+		}
+	} else {
+		instance.DB = &DB{
+			Host:       getEnv("POSTGRES_HOST", ""),
+			Port:       getEnv("POSTGRES_PORT", ""),
+			NameDB:     getEnv("POSTGRES_DB_NAME", ""),
+			UserName:   getEnv("POSTGRES_USER", ""),
+			DBPassword: getEnv("POSTGRES_PASSWORD", ""),
+		}
 
-	err := cleanenv.ReadEnv(instance.DB)
-	if err != nil {
-		logger.Fatal(err.Error())
 	}
 
 	return instance
+}
+
+func getEnv(key string, defaultVal string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+
+	return defaultVal
 }
 
 func ReadConfig() *Config {

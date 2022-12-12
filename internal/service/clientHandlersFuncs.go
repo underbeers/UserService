@@ -48,7 +48,7 @@ func pingAPIGateway(srv *service) error {
 
 func gatewayURL(srv *service) (*url.URL, error) {
 	var domain string
-	if srv.conf.IsLocal {
+	if srv.conf.DebugMode {
 		domain = srv.conf.Gateway.IP
 	} else {
 		domain = srv.conf.Gateway.Label
