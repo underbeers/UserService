@@ -1,7 +1,11 @@
 package service
 
 import (
+	"encoding/json"
+	"git.friends.com/PetLand/UserService/v2/internal/core/register"
+	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
+	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"log"
 	"net/http"
 	"net/url"
@@ -10,19 +14,101 @@ import (
 const (
 	protocol = "http"
 	msg      = "msg"
-	GET      = "GET"
-	POST     = "POST"
-	PATCH    = "PATCH"
-	DELETE   = "DELETE"
 )
 
 func (srv *service) registerClientHandlers() {
-	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(GET)
+	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(http.MethodGet)
+	srv.router.HandleFunc(baseURL+"registration/new/", srv.handleCreteNewUser()).Methods(http.MethodPost)
+	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		srv.respond(w, http.StatusOK, "Hello, it's work!")
+	}
+}
+
+func (srv *service) handleCreteNewUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		type Request struct {
+			FirstName   string `json:"firstName"`
+			SurName     string `json:"surName"`
+			Email       string `json:"email"`
+			MobilePhone string `json:"mobilePhone"`
+			Password    string `json:"password"`
+		}
+
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+
+			return
+		}
+
+		u := &models.UserEx{
+			Profile: models.Profile{
+				FirstName: req.FirstName,
+				SurName:   req.SurName,
+				Status:    0,
+			},
+			Data: &models.Data{
+				PasswordEncoded: req.Password,
+			},
+			Contacts: &models.ContactsEX{
+				Contacts: models.Contacts{
+					Email:             req.Email,
+					MobilePhone:       req.MobilePhone,
+					EmailSubscription: false,
+					ShowPhone:         true,
+				},
+			},
+		}
+
+		check, err := signup.CheckIfSigned(srv.store, u)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		if check {
+			srv.respond(w, http.StatusConflict, "User with this email already exists")
+
+			return
+		}
+
+		if err = signup.ValidateUser(u); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		if err = register.EncryptPassword(u.Data); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		if err = signup.SignUp(srv.store, u); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		srv.respond(w, http.StatusCreated, u.ID)
+	}
+}
+
+func (srv *service) handleCheckRegistration() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+func (srv *service) handleLoginUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		return
 	}
 }
 

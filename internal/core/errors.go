@@ -1,0 +1,32 @@
+package core
+
+import "git.friends.com/PetLand/UserService/v2/internal/genErr"
+
+var (
+	ErrInvalidToken        = genErr.New("invalid token")
+	ErrUnknownFingerprint  = genErr.New("unknown error while checking Fingerprint")
+	ErrRepository          = genErr.New("error working with repository")
+	ErrBadCredentials      = genErr.New("bad credentials")
+	ErrCantWriteFile       = genErr.New("can't write file")
+	ErrTokenExpired        = genErr.New("token has expired")
+	ErrCloseResponseBody   = genErr.New("can't close response body")
+	ErrTokenHeaderMismatch = genErr.New("token and Fingerprint header mismatch")
+	ErrFprintNotFound      = genErr.New("fingerprint not found")
+	ErrFprintHeaderMissing = genErr.New("'Fingerprint' header missing")
+	ErrUnavailableResource = genErr.New("unavailable resource")
+	ErrSession             = genErr.New("session error")
+	ErrWrongType           = genErr.New("wrong type for login")
+	ErrIncorrectPhone      = genErr.New("incorrect phone number")
+	ErrInvalidData         = genErr.New("invalid registration data")
+	ErrInvalidPassword     = genErr.New("invalid password")
+	ErrCantRefreshToken    = genErr.New("can't refresh token")
+	ErrInvalidEmail        = genErr.New("invalid email address")
+	ErrValidationFailure   = genErr.New("Password validation failure")
+	ErrEncryptPassword     = genErr.New("failed to encrypt password")
+	ErrDecodeJSON          = genErr.New("failed to decode json")
+	ErrEmailEmpty          = genErr.New("email is empty")
+	ErrParseUUID           = genErr.New("failed to parse UUID")
+	ErrInvalidVerification = genErr.New("verification code is invalid")
+	ErrExpiredVerification = genErr.New("verification code is expired")
+	ErrAttemptsLimit       = genErr.New("wrong attempts limit exceeded")
+)

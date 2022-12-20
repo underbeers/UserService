@@ -4,4 +4,4 @@ gateway:
   ip: 127.0.0.1
   label: petland_api
   port: 6000
-db_version: 14
+db_version: 1

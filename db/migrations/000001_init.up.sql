@@ -2,8 +2,7 @@ CREATE TABLE user_profile
 (
     id          UUID         NOT NULL PRIMARY KEY,
     first_name  VARCHAR(255) NOT NULL,
-    second_name VARCHAR(255),
-    sur_name    VARCHAR(255),
+    sur_name    VARCHAR(255) NOT NULL,
     status      INT          NOT NULL
 );
 

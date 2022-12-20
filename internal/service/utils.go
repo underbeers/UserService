@@ -34,7 +34,6 @@ func NewLogger(debugMode bool) *zap.SugaredLogger {
 		)
 		logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 		sugar := logger.Sugar()
-		sugar.Info("It's debug mode")
 
 		return sugar
 	}
