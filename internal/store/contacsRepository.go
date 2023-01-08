@@ -1,8 +1,6 @@
 package store
 
 import (
-	"database/sql"
-	"errors"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/jmoiron/sqlx"
@@ -25,7 +23,7 @@ func (r *ContactsRepository) Create(c *models.Contacts) error {
 func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 	if err := r.store.db.QueryRow(
 		tx,
-		`INSERT INTO  public.user_contacts (id_profile, email, mobile_phone, 
+		`INSERT INTO user_service.public.user_contacts (id_profile, email, mobile_phone, 
 			email_subscription, show_phone) VALUES ($1, $2, $3, $4, $5);`,
 		c.ProfileID,
 		c.Email,
@@ -40,18 +38,19 @@ func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 }
 
 func (r *ContactsRepository) CheckIfSigned(c *models.Contacts) (bool, error) {
-	var res bool
+	var signed bool
 	row := r.store.db.QueryRow(nil,
-		`SELECT EXISTS (SELECT * FROM public.user_contacts WHERE email = $1)`,
+		`SELECT EXISTS (SELECT * FROM user_service.public.user_contacts WHERE email = $1)`,
 		c.Email)
-	if err := row.Scan(&res); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return false, nil
-		}
+	if err := row.Scan(&signed); err != nil {
 		err = genErr.NewError(err, ErrScanStructFailed)
 
 		return true, err
 	}
 
-	return true, nil
+	if signed {
+		return true, nil
+	}
+
+	return false, nil
 }

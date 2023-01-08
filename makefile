@@ -2,14 +2,14 @@ create_migration:
 # make create_migration name=name_your_migration_without_spaces
 	migrate create -ext sql -dir db/migrations -seq ${name}
 migrate:
-# make migrate password=postgres_password host=localhost port=5420
-	migrate -database 'postgres://postgres:${password}@${host}:${port}/user_service?sslmode=disable' -path ./db/migrations up
+# make migrate password=postgres_password host=localhost port=5420 mode=up/down
+	migrate -database 'postgres://postgres:${password}@${host}:${port}/user_service?sslmode=disable' -path ./db/migrations ${mode}
 fmt:
 	go fmt ./...
 db_win:
-	docker run -d --name pgsql --hostname db -p 5420:5432 -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -v C:\Program_Files\PostgreSQL\14\data:/var/lib/postgresql/data --network=net_postgres postgres:14-alpine3.16
+	docker run -d --name=pgsql -p 5420:5432 -e POSTGRES_PASSWORD='localpassword' -v C:\Program_Files\PostgreSQL\14\data:/var/lib/postgresql/data postgres
 db_unix:
-	docker run -d --name pgsql --hostname db -p 5420:5432 -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -v /var/lib/pgsql/data:/var/lib/postgresql/data --net net_postgres postgres:14-alpine3.16
+	docker run -d --name=pgsql -p 5420:5432 -e POSTGRES_PASSWORD='localpassword' -v /var/lib/pgsql/data:/var/lib/pgsql/data postgres
 local:
 	go build -o . cmd/main.go
 	./main --use_db_config

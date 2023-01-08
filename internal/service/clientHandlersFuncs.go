@@ -64,32 +64,32 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 			},
 		}
 
-		check, err := signup.CheckIfSigned(srv.store, u)
+		signed, err := signup.CheckIfSigned(srv.store, u)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
 		}
 
-		if check {
+		if signed {
 			srv.respond(w, http.StatusConflict, "User with this email already exists")
 
 			return
 		}
 
-		if err = signup.ValidateUser(u); err != nil {
+		if err := signup.ValidateUser(u); err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
 		}
 
-		if err = register.EncryptPassword(u.Data); err != nil {
+		if err := register.EncryptPassword(u.Data); err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
 		}
 
-		if err = signup.SignUp(srv.store, u); err != nil {
+		if err := signup.SignUp(srv.store, u); err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
