@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"git.friends.com/PetLand/UserService/v2/internal/config"
+	"git.friends.com/PetLand/UserService/v2/internal/genErr"
+	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"git.friends.com/PetLand/UserService/v2/internal/store"
 	"git.friends.com/PetLand/UserService/v2/internal/store/db"
 	"github.com/gorilla/mux"
@@ -107,4 +110,18 @@ func checkMigrationVersion(srv *service, db *sqlx.DB) {
 	if srv.conf.VersionDB != migration.Version {
 		srv.Logger.Fatalf("Mismatched db versions. Expected: %d, got: %d", srv.conf.VersionDB, migration.Version)
 	}
+}
+
+func writeJSONBody(w http.ResponseWriter, tokens *models.Tokens) error {
+	w.Header().Add("Content-Type", "application/json")
+	tokenJSON, err := json.Marshal(models.AccessToken{AccessToken: tokens.AccessToken})
+	if err != nil {
+		return genErr.NewError(err, ErrMarshalUnmarshal, "msg", "error while Marshal AccessToken")
+	}
+	_, err = w.Write(tokenJSON)
+	if err != nil {
+		return genErr.NewError(err, ErrWriteBody, "msg", "error while writing tokens")
+	}
+
+	return nil
 }

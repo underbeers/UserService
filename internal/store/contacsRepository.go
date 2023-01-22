@@ -1,6 +1,8 @@
 package store
 
 import (
+	"database/sql"
+	"errors"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/jmoiron/sqlx"
@@ -14,6 +16,8 @@ type Contacter interface {
 	Create(c *models.Contacts) error
 	CreateTx(tx *sqlx.Tx, c *models.Contacts) error
 	CheckIfSigned(c *models.Contacts) (bool, error)
+	GetByEmail(email string) (*models.Contacts, error)
+	GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error)
 }
 
 func (r *ContactsRepository) Create(c *models.Contacts) error {
@@ -53,4 +57,27 @@ func (r *ContactsRepository) CheckIfSigned(c *models.Contacts) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (r *ContactsRepository) GetByEmail(email string) (*models.Contacts, error) {
+	return r.GetByEmailTx(nil, email)
+}
+
+func (r *ContactsRepository) GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error) {
+	contacts := &models.Contacts{}
+	row := r.store.db.QueryRow(tx,
+		`SELECT id, id_profile, email, mobile_phone, show_phone 
+			FROM user_service.public.user_contacts WHERE email = $1`, email)
+
+	err := row.StructScan(contacts)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = genErr.NewError(err, ErrNotFound, "email", email)
+		}
+		err = genErr.NewError(err, ErrScanStructFailed)
+
+		return nil, r.store.Rollback(tx, err)
+	}
+
+	return contacts, nil
 }

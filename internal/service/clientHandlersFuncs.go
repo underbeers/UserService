@@ -2,6 +2,9 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
+	"git.friends.com/PetLand/UserService/v2/internal/core"
+	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
@@ -9,27 +12,46 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
+	"strings"
+	"time"
 )
 
 const (
-	protocol = "http"
-	msg      = "msg"
+	protocol   = "http"
+	msg        = "msg"
+	keyValPair = 2
 )
 
 func (srv *service) registerClientHandlers() {
-	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(http.MethodGet)
-	srv.router.HandleFunc(baseURL+"registration/new/", srv.handleCreteNewUser()).Methods(http.MethodPost)
-	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost)
+	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"registration/new/", srv.handleCreteNewUser()).Methods(http.MethodPost, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"login/token/", srv.handleRefreshToken()).Methods(http.MethodGet, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		//Allow CORS here By * or specific origin
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		srv.respond(w, http.StatusOK, "Hello, it's work!")
 	}
 }
 
 func (srv *service) handleCreteNewUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		//Allow CORS here By * or specific origin
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		type Request struct {
 			FirstName   string `json:"firstName"`
 			SurName     string `json:"surName"`
@@ -99,17 +121,111 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 	}
 }
 
-func (srv *service) handleCheckRegistration() http.HandlerFunc {
+func (srv *service) handleLoginUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		req := &models.Login{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
+		w.Header().Add("Content-Type", "application/json")
+		tokens, err := login.Login(req, srv.store)
+		if err != nil {
+			switch {
+			case errors.Is(err, core.ErrInvalidToken):
+				srv.warning(w, http.StatusBadRequest, genErr.NewError(err, core.ErrInvalidToken))
+
+				return
+			}
+			srv.warning(w, http.StatusBadRequest, genErr.NewError(err, core.ErrBadCredentials))
+
+			return
+		}
+
+		tokenJSON, err := json.Marshal(models.AccessToken{AccessToken: tokens.AccessToken})
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
+		_, err = w.Write(tokenJSON)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
 	}
 }
 
-func (srv *service) handleLoginUser() http.HandlerFunc {
+func (srv *service) handleRefreshToken() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var tokens *models.Tokens
+		expired := r.Header.Get("ExpiredIn")
+		if len(expired) > 0 {
+			exp, err := strconv.ParseInt(expired, 10, 64)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, err, r.Context())
+			}
+			if time.Now().Before(time.Unix(exp, 0)) {
+				providedToken, err := getAuthHeader(r.Header.Get("Authorization"))
+				if err != nil {
+					srv.warning(w, http.StatusBadRequest, genErr.NewError(nil, err))
 
-		return
+					return
+				}
+				tokens, err = login.RefreshAccess(providedToken, srv.store)
+				if err != nil {
+					srv.error(w, http.StatusInternalServerError, err, r.Context())
+				}
+
+				return
+			}
+		}
+
+		providedToken, err := getAuthHeader(r.Header.Get("Authorization"))
+		if err != nil {
+			srv.warning(w, http.StatusBadRequest, genErr.NewError(nil, err))
+
+			return
+		}
+
+		tokens, err = login.Refresh(providedToken, srv.store)
+		if err != nil {
+			switch {
+			case errors.Is(err, core.ErrTokenExpired):
+				srv.warning(w, http.StatusUnauthorized, genErr.NewError(err, core.ErrTokenExpired))
+
+				return
+			case errors.Is(err, core.ErrTokenHeaderMismatch):
+				srv.warning(w, http.StatusBadRequest, genErr.NewError(err, core.ErrTokenHeaderMismatch))
+
+				return
+			case errors.Is(err, core.ErrInvalidToken):
+				srv.warning(w, http.StatusBadRequest, genErr.NewError(err, core.ErrInvalidToken))
+
+				return
+			}
+
+			srv.warning(w, http.StatusBadRequest, genErr.NewError(err, core.ErrInvalidToken))
+
+			return
+		}
+
+		err = writeJSONBody(w, tokens)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
 	}
+}
+
+func getAuthHeader(header string) (string, error) {
+	if len(header) == 0 {
+		return "", genErr.NewError(nil, ErrNoHeader, msg, ErrAuthHeaderMissing)
+	}
+	providedHeader := strings.Split(header, " ")
+	if len(providedHeader) != keyValPair {
+		return "", genErr.NewError(nil, ErrInvalidHeader, msg, ErrInvalidHeader)
+	}
+
+	return providedHeader[1], nil
 }
 
 func pingAPIGateway(srv *service) error {

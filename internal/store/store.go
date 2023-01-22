@@ -15,6 +15,7 @@ type Store struct {
 	userDataRepository     UserDater
 	expertDataRepository   ExpertDater
 	verificationRepository Verificationer
+	sessionRepository      Sessioner
 }
 
 type TX interface {
@@ -88,6 +89,18 @@ func (s *Store) Verification() Verificationer {
 	}
 
 	return s.verificationRepository
+}
+
+func (s *Store) TokenSession() Sessioner {
+	if s.sessionRepository != nil {
+		return s.sessionRepository
+	}
+
+	s.sessionRepository = &SessionRepository{
+		store: s,
+	}
+
+	return s.sessionRepository
 }
 
 func (s *Store) BeginTransaction() (*sqlx.Tx, error) {

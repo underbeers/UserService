@@ -1,0 +1,3 @@
+{"level":"info","ts":"2023-01-22T10:17:59.480+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-22T10:17:59.490+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.000164806,"commandTag":"","pid":590,"sql":";","args":[]}
+{"level":"info","ts":"2023-01-22T10:17:59.493+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001790949,"rowCount":1,"pid":590}

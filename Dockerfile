@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build -o /user_service ./cmd/main.go
+RUN go build -o ./user_service ./cmd/main.go
 
 ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 ENV POSTGRES_HOST=$POSTGRES_HOST
@@ -18,4 +18,4 @@ ENV POSTGRES_DB_NAME=$POSTGRES_DB_NAME
 
 EXPOSE 6001
 
-CMD [ "/user_service" ]
+CMD [ "./user_service" ]

@@ -26,23 +26,13 @@ func NewLogger(debugMode bool) *zap.SugaredLogger {
 	}
 	writer := zapcore.AddSync(logFile)
 	defaultLogLevel := zapcore.DebugLevel
-	if debugMode {
-		consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
-		core := zapcore.NewTee(
-			zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
-			zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), defaultLogLevel),
-		)
-		logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
-		sugar := logger.Sugar()
-
-		return sugar
-	}
+	consoleEncoder := zapcore.NewConsoleEncoder(loggerConfig)
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
+		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), defaultLogLevel),
 	)
 	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	sugar := logger.Sugar()
-	sugar.Info("Lol, it's not debug mode")
 
 	return sugar
 }

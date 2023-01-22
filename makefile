@@ -14,9 +14,9 @@ local:
 	go build -o . cmd/main.go
 	./main --use_db_config
 build_image:
-	docker build -t rodmul/pl_user_service .
+	docker build -t rodmul/pl_user_service:v2 .
 run:
-	docker run -d -p 6001:6001 -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-	-e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_USER=$POSTGRES_USER \
-	-e POSTGRES_PORT=$POSTGRES_PORT -e POSTGRES_DB_NAME=$POSTGRES_DB_NAME \
-	--name user_service_container rodmul/pl_user_service
+	docker run -d -p 6001:6001 -e POSTGRES_PASSWORD='DNd72JDSufesosd9' \
+	-e POSTGRES_HOST='79.137.198.139' -e POSTGRES_USER='postgres' \
+	-e POSTGRES_PORT='5432' -e POSTGRES_DB_NAME='user_service' \
+	--name user_service_container rodmul/pl_user_service:v2
