@@ -5,6 +5,7 @@ import (
 	"errors"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -18,6 +19,8 @@ type Contacter interface {
 	CheckIfSigned(c *models.Contacts) (bool, error)
 	GetByEmail(email string) (*models.Contacts, error)
 	GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error)
+	GetByUserProfileID(id uuid.UUID) (*models.Contacts, error)
+	GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error)
 }
 
 func (r *ContactsRepository) Create(c *models.Contacts) error {
@@ -73,6 +76,33 @@ func (r *ContactsRepository) GetByEmailTx(tx *sqlx.Tx, email string) (*models.Co
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = genErr.NewError(err, ErrNotFound, "email", email)
+
+			return nil, err
+		}
+		err = genErr.NewError(err, ErrScanStructFailed)
+
+		return nil, r.store.Rollback(tx, err)
+	}
+
+	return contacts, nil
+}
+
+func (r *ContactsRepository) GetByUserProfileID(id uuid.UUID) (*models.Contacts, error) {
+	return r.GetByUserProfileIDTx(nil, id)
+}
+
+func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error) {
+	contacts := &models.Contacts{}
+	row := r.store.db.QueryRow(tx,
+		`SELECT id, id_profile, email, mobile_phone, show_phone 
+			FROM user_service.public.user_contacts WHERE id_profile = $1`, id)
+
+	err := row.StructScan(contacts)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = genErr.NewError(err, ErrNotFound, "id", id)
+
+			return nil, err
 		}
 		err = genErr.NewError(err, ErrScanStructFailed)
 

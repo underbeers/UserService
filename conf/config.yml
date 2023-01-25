@@ -1,7 +1,8 @@
 listen:
+  ip: 127.0.0.2
   port: 6001
 gateway:
   ip: 127.0.0.1
-  label: petland_api
+  label: pl-apigateway-dev
   port: 6000
 db_version: 2

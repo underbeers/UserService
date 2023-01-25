@@ -30,4 +30,5 @@ var (
 	ErrInvalidVerification = genErr.New("verification code is invalid")
 	ErrExpiredVerification = genErr.New("verification code is expired")
 	ErrAttemptsLimit       = genErr.New("wrong attempts limit exceeded")
+	ErrMarshalUnmarshal    = genErr.New("can't marshal/unmarshal data")
 )

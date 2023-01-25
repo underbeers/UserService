@@ -13,4 +13,7 @@ var (
 	ErrInvalidHeader     = genErr.New("header is invalid")
 	ErrWriteBody         = genErr.New("can't write body")
 	ErrNoHeader          = genErr.New("no header provided")
+	ErrMarshal           = genErr.New("could not marshal data")
+	ErrOpenFile          = genErr.New("can't open file")
+	ErrReadFile          = genErr.New("can't read file")
 )

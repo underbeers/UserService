@@ -1,14 +1,17 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"git.friends.com/PetLand/UserService/v2/internal/config"
 	"git.friends.com/PetLand/UserService/v2/internal/core"
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,6 +24,7 @@ const (
 	protocol   = "http"
 	msg        = "msg"
 	keyValPair = 2
+	userIDAuth = "UserID"
 )
 
 func (srv *service) registerClientHandlers() {
@@ -28,6 +32,8 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"registration/new/", srv.handleCreteNewUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/token/", srv.handleRefreshToken()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/info/", srv.handleUserInfo()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -216,6 +222,60 @@ func (srv *service) handleRefreshToken() http.HandlerFunc {
 	}
 }
 
+func (srv *service) handleUserInfo() http.HandlerFunc {
+	type Response struct {
+		FirstName   string
+		SurName     string
+		MobilePhone string
+		Email       string
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := r.Header.Get(userIDAuth)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+
+			return
+		}
+		id, err := uuid.Parse(userID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+		}
+		contacts, err := srv.store.Contacts().GetByUserProfileID(id)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		user, err := srv.store.Profile().GetByUserID(id)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		resp := &Response{
+			FirstName:   user.FirstName,
+			SurName:     user.SurName,
+			MobilePhone: contacts.MobilePhone,
+			Email:       contacts.Email,
+		}
+		w.Header().Add("Content-Type", "application/json")
+		userInfoJSON, err := json.Marshal(resp)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		_, err = w.Write(userInfoJSON)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+	}
+}
+
 func getAuthHeader(header string) (string, error) {
 	if len(header) == 0 {
 		return "", genErr.NewError(nil, ErrNoHeader, msg, ErrAuthHeaderMissing)
@@ -226,6 +286,87 @@ func getAuthHeader(header string) (string, error) {
 	}
 
 	return providedHeader[1], nil
+}
+
+func writeJSONBody(w http.ResponseWriter, tokens *models.Tokens) error {
+	w.Header().Add("Content-Type", "application/json")
+	tokenJSON, err := json.Marshal(models.AccessToken{AccessToken: tokens.AccessToken})
+	if err != nil {
+		return genErr.NewError(err, ErrMarshalUnmarshal, "msg", "error while Marshal AccessToken")
+	}
+	_, err = w.Write(tokenJSON)
+	if err != nil {
+		return genErr.NewError(err, ErrWriteBody, "msg", "error while writing tokens")
+	}
+
+	return nil
+}
+
+func (srv *service) handleInfo() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		serviceInfo := GetServiceInfo(srv)
+		payload, err := json.Marshal(serviceInfo)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
+
+		_, err = w.Write(payload)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
+	}
+}
+
+func HelloAPIGateway(srv *service) error {
+	var domain string
+
+	cfg := config.ReadConfig()
+	if srv.conf.DebugMode {
+		domain = cfg.Gateway.IP
+	} else {
+		domain = cfg.Gateway.Label
+	}
+	gatewayURL, err := url.Parse(
+		protocol + "://" + domain + ":" + cfg.Gateway.Port + baseURL + "hello/")
+	if err != nil {
+		return genErr.NewError(err, ErrConnectAPIGateWay, msg, "can't parse ur for endpoint 'hello/'")
+	}
+
+	//endpoints := config.ReadServicesList()
+
+	info := &models.Hello{
+		Name:      "user",
+		Label:     "pl-userservice-dev",
+		IP:        cfg.Listen.IP,
+		Port:      cfg.Listen.Port,
+		Endpoints: nil,
+	}
+	jsonStr, err := json.Marshal(info)
+	if err != nil {
+		return genErr.NewError(err, ErrMarshal)
+	}
+
+	go knock(gatewayURL.String(), jsonStr)
+
+	return nil
+}
+
+func knock(url string, payload []byte) {
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(payload)) //nolint: gosec, noctx
+	if resp == nil {
+		// FIXME:Super dirty. Need to handle error
+		log.Println("can't say Hello to Gateway", err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+	if err != nil {
+		log.Println("knock() Post Error", err)
+	}
+	if resp.StatusCode == http.StatusOK {
+		log.Println("Successfully greet ApiGateway")
+	}
 }
 
 func pingAPIGateway(srv *service) error {
