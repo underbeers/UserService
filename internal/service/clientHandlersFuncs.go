@@ -28,7 +28,7 @@ const (
 )
 
 func (srv *service) registerClientHandlers() {
-	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"helloMessage/", srv.handleHelloMessage()).Methods(http.MethodGet)
 	srv.router.HandleFunc(baseURL+"registration/new/", srv.handleCreteNewUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/token/", srv.handleRefreshToken()).Methods(http.MethodGet, http.MethodOptions)
@@ -38,26 +38,12 @@ func (srv *service) registerClientHandlers() {
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//Allow CORS here By * or specific origin
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		srv.respond(w, http.StatusOK, "Hello, it's work!")
 	}
 }
 
 func (srv *service) handleCreteNewUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		//Allow CORS here By * or specific origin
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
 		type Request struct {
 			FirstName   string `json:"firstName"`
 			SurName     string `json:"surName"`
@@ -98,7 +84,6 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 
 			return
 		}
-
 		if signed {
 			srv.respond(w, http.StatusConflict, "User with this email already exists")
 
@@ -337,7 +322,7 @@ func HelloAPIGateway(srv *service) error {
 
 	info := &models.Hello{
 		Name:      "user",
-		Label:     "pl-userservice-dev",
+		Label:     "pl_user_service",
 		IP:        cfg.Listen.IP,
 		Port:      cfg.Listen.Port,
 		Endpoints: nil,
@@ -398,6 +383,7 @@ func gatewayURL(srv *service) (*url.URL, error) {
 	}
 	gwURL, err := url.Parse(
 		protocol + "://" + domain + ":" + srv.conf.Gateway.Port + baseURL + "hello/")
+	srv.Logger.Info(gwURL)
 	if err != nil {
 		return nil, genErr.NewError(err, ErrConnectAPIGateWay)
 	}

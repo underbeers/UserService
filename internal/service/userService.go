@@ -125,7 +125,7 @@ func GetServiceInfo(srv *service) *config.Service {
 	cfg := config.ReadConfig()
 	instance := config.Service{
 		Name:      "user",
-		Label:     "pl-userservice-dev",
+		Label:     "pl_user_service",
 		IP:        cfg.Listen.IP,
 		Port:      cfg.Listen.Port,
 		Endpoints: nil,
