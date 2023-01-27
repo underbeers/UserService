@@ -24,10 +24,6 @@ func ValidateUser(u *models.UserEx) error {
 		return genErr.NewError(err, core.ErrInvalidData)
 	}
 
-	/*if err = ValidateCharset(f.Password); err != nil {
-		return genErr.NewError(err, core.ErrInvalidData)
-	}*/
-
 	return nil
 }
 
