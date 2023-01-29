@@ -53,7 +53,7 @@ func (db *DB) GetConnectionString() string {
 
 func GetConfig(debugMode bool) *Config {
 	logger := log.Default()
-	logger.Print("Read application configuration")
+	//logger.Print("Read application configuration")
 	instance := &Config{DB: &DB{}, DebugMode: debugMode}
 	if err := cleanenv.ReadConfig("./conf/config.yml", instance); err != nil {
 		help, _ := cleanenv.GetDescription(instance, nil)
@@ -69,6 +69,15 @@ func GetConfig(debugMode bool) *Config {
 			logger.Fatal(err)
 		}
 	} else {
+		instance.Gateway = &Gateway{
+			IP:    getEnv("GATEWAY_IP", ""),
+			Port:  getEnv("GATEWAY_PORT", ""),
+			Label: getEnv("GATEWAY_LABEL", ""),
+		}
+
+		instance.Listen.IP = "127.0.0.1"
+		instance.Listen.Port = "6001"
+
 		instance.DB = &DB{
 			Host:       getEnv("POSTGRES_HOST", ""),
 			Port:       getEnv("POSTGRES_PORT", ""),
@@ -76,7 +85,6 @@ func GetConfig(debugMode bool) *Config {
 			UserName:   getEnv("POSTGRES_USER", ""),
 			DBPassword: getEnv("POSTGRES_PASSWORD", ""),
 		}
-
 	}
 
 	return instance

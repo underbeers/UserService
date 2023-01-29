@@ -2,14 +2,22 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"git.friends.com/PetLand/UserService/v2/internal/config"
+	"git.friends.com/PetLand/UserService/v2/internal/core"
+	"git.friends.com/PetLand/UserService/v2/internal/genErr"
+	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"git.friends.com/PetLand/UserService/v2/internal/store"
 	"git.friends.com/PetLand/UserService/v2/internal/store/db"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
+	"io"
 	"net/http"
+	"os"
+	"strings"
+	"time"
 )
 
 type service struct {
@@ -20,7 +28,7 @@ type service struct {
 }
 
 const (
-	baseURL   = "/"
+	baseURL   = "/api/v1/"
 	requestID = "X-request-ID"
 	attempts  = 3 // The number of attempts we're trying to say Hello() to ApiGateway
 	timeout   = 5 // Timeout in Seconds, how long we wait to reconnect to ApiGateway
@@ -43,7 +51,7 @@ func (srv *service) Start() error {
 	}
 	checkMigrationVersion(srv, database)
 	srv.store = store.New(database, srv.Logger)
-	/*var errorCnt int
+	var errorCnt int
 	var er error
 	for errorCnt < attempts {
 		time.Sleep(time.Second * timeout)
@@ -58,12 +66,11 @@ func (srv *service) Start() error {
 	if errorCnt >= attempts {
 		return genErr.NewError(er, ErrConnectAPIGateWay, msg, "failed to send info to the APIGateway")
 	}
-	//err = HelloAPIGateway(srv)
+	err = HelloAPIGateway(srv)
 	if err != nil {
 		return err
 	}
 	srv.Logger.Info("Start to listen to", zap.String("port", srv.conf.Listen.Port))
-	*/
 
 	return fmt.Errorf("failed to listen and serve: %w", http.ListenAndServe(":"+srv.conf.Listen.Port, srv.router))
 }
@@ -107,4 +114,92 @@ func checkMigrationVersion(srv *service, db *sqlx.DB) {
 	if srv.conf.VersionDB != migration.Version {
 		srv.Logger.Fatalf("Mismatched db versions. Expected: %d, got: %d", srv.conf.VersionDB, migration.Version)
 	}
+}
+
+func GetServiceInfo(srv *service) *config.Service {
+	handles, err := getHandles(srv)
+	if err != nil {
+		srv.Logger.Fatalf("failed to getHandles, %v", err)
+	}
+
+	cfg := config.ReadConfig()
+	instance := config.Service{
+		Name:      "user",
+		Label:     "pl_user_service",
+		IP:        cfg.Listen.IP,
+		Port:      cfg.Listen.Port,
+		Endpoints: nil,
+	}
+	unprotected, err := getUnprotected()
+	if err != nil {
+		srv.Logger.Fatalf("failed to getUnprotected, %v", err)
+	}
+
+	for k, v := range handles {
+		// skip endpoint-info
+		if k == "endpoint-info/" {
+			continue
+		}
+		endpoint := models.Endpoint{
+			URL:       k,
+			Protected: true,
+			Methods:   v,
+		}
+		if unprotected[k] {
+			endpoint.Protected = false
+		}
+		instance.Endpoints = append(instance.Endpoints, endpoint)
+	}
+
+	return &instance
+}
+
+func getHandles(srv *service) (map[string][]string, error) {
+	data := make(map[string][]string)
+	err := srv.router.Walk(
+		func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+			path, _ := route.GetPathTemplate()
+			n, _ := route.GetMethods()
+			path = strings.Split(path, "/api/v1/")[1]
+			d, ok := data[path]
+			if ok {
+				n = append(n, d...)
+				data[path] = n
+
+				return nil
+			}
+			data[path] = n
+
+			return nil
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func getUnprotected() (map[string]bool, error) {
+	// Read's list of unprotected endpoints
+	lst, err := os.OpenFile("service.json", os.O_RDONLY, 0o600) //nolint:gomnd
+	if err != nil {
+		return nil, genErr.NewError(err, ErrOpenFile)
+	}
+	reader, err := io.ReadAll(lst)
+	if err != nil {
+		return nil, genErr.NewError(err, ErrReadFile)
+	}
+	data := struct {
+		URLS []string `json:"urls"`
+	}{}
+	err = json.Unmarshal(reader, &data)
+	if err != nil {
+		return nil, genErr.NewError(err, core.ErrMarshalUnmarshal)
+	}
+	result := make(map[string]bool)
+	for _, k := range data.URLS {
+		result[k] = true
+	}
+
+	return result, nil
 }

@@ -1,0 +1,166 @@
+{"level":"info","ts":"2023-01-25T17:08:49.640+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:08:49.654+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.001257667,"commandTag":"","pid":4069}
+{"level":"info","ts":"2023-01-25T17:08:49.657+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.002903107,"rowCount":1,"pid":4069}
+{"level":"info","ts":"2023-01-25T17:08:54.658+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:08:54.660+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:14:42.265+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:14:42.273+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000117032,"commandTag":"","pid":4088}
+{"level":"info","ts":"2023-01-25T17:14:42.275+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4088,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001088709,"rowCount":1}
+{"level":"info","ts":"2023-01-25T17:14:47.278+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:14:47.280+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:17:42.274+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4088}
+{"level":"info","ts":"2023-01-25T17:27:07.217+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:27:07.227+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000287774,"commandTag":"","pid":4126}
+{"level":"info","ts":"2023-01-25T17:27:07.228+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","time":0.001012142,"rowCount":1,"pid":4126,"sql":"SELECT version, dirty FROM schema_migrations;","args":[]}
+{"level":"info","ts":"2023-01-25T17:27:12.232+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:27:12.233+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:28:59.923+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:28:59.933+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000211819,"commandTag":"","pid":4133,"sql":";"}
+{"level":"info","ts":"2023-01-25T17:28:59.934+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.000901572,"rowCount":1,"pid":4133,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-01-25T17:29:04.934+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:29:04.935+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:32:00.001+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4133}
+{"level":"info","ts":"2023-01-25T17:35:51.732+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:35:51.740+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000148299,"commandTag":"","pid":4154}
+{"level":"info","ts":"2023-01-25T17:35:51.741+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","rowCount":1,"pid":4154,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.000814176}
+{"level":"info","ts":"2023-01-25T17:35:56.742+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:36:01.743+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 2 of 3"}
+{"level":"info","ts":"2023-01-25T17:36:06.746+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 3 of 3"}
+{"level":"fatal","ts":"2023-01-25T17:36:06.747+0300","caller":"cmd/main.go:15","msg":"can't connect to API GateWay","stacktrace":"main.main\n\t/home/rodmul/GolandProjects/github.com/Petland/UserService/cmd/main.go:15\nruntime.main\n\t/usr/lib/go-1.18/src/runtime/proc.go:250"}
+{"level":"info","ts":"2023-01-25T17:38:41.060+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:38:41.074+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","pid":4164,"sql":";","args":[],"time":0.000215507,"commandTag":""}
+{"level":"info","ts":"2023-01-25T17:38:41.076+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001516981,"rowCount":1,"pid":4164}
+{"level":"info","ts":"2023-01-25T17:38:46.081+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:40:11.668+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:40:21.822+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:40:21.835+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":4170,"sql":";","args":[],"time":0.000193986}
+{"level":"info","ts":"2023-01-25T17:40:21.837+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4170,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001277089,"rowCount":1}
+{"level":"info","ts":"2023-01-25T17:40:26.840+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:40:43.654+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:44:04.628+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T17:44:04.637+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000155367,"commandTag":"","pid":4182,"sql":";"}
+{"level":"info","ts":"2023-01-25T17:44:04.638+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001052191,"rowCount":1,"pid":4182}
+{"level":"info","ts":"2023-01-25T17:44:09.642+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T17:44:09.644+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T17:47:04.638+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4182}
+{"level":"info","ts":"2023-01-25T18:00:27.111+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:00:27.126+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000165809,"commandTag":"","pid":4232}
+{"level":"info","ts":"2023-01-25T18:00:27.127+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001002379,"rowCount":1,"pid":4232}
+{"level":"info","ts":"2023-01-25T18:00:32.130+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:00:32.133+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T18:03:59.865+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:03:59.885+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000184501,"commandTag":"","pid":4244}
+{"level":"info","ts":"2023-01-25T18:03:59.887+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","time":0.001484955,"rowCount":1,"pid":4244,"sql":"SELECT version, dirty FROM schema_migrations;","args":[]}
+{"level":"info","ts":"2023-01-25T18:04:04.890+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:06:43.870+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T18:07:07.828+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4244}
+{"level":"info","ts":"2023-01-25T18:24:45.228+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:24:45.238+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.000187041,"commandTag":"","pid":4282,"sql":";","args":[]}
+{"level":"info","ts":"2023-01-25T18:24:45.239+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001118349,"rowCount":1,"pid":4282}
+{"level":"info","ts":"2023-01-25T18:24:50.243+0300","caller":"service/userService.go:52","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:24:50.248+0300","caller":"service/userService.go:67","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T18:27:45.239+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4282}
+{"level":"info","ts":"2023-01-25T18:40:49.871+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:40:49.882+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000194811,"commandTag":"","pid":4332,"sql":";"}
+{"level":"info","ts":"2023-01-25T18:40:49.883+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.000976152,"rowCount":1,"pid":4332,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-01-25T18:40:54.887+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:40:54.889+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T18:44:01.884+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:44:01.900+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","pid":4342,"sql":";","args":[],"time":0.000132527,"commandTag":""}
+{"level":"info","ts":"2023-01-25T18:44:01.902+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","rowCount":1,"pid":4342,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001034386}
+{"level":"info","ts":"2023-01-25T18:44:06.906+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:44:06.908+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"fatal","ts":"2023-01-25T18:44:06.912+0300","caller":"service/userService.go:135","msg":"failed to getUnprotected, can't open file","stacktrace":"git.friends.com/PetLand/UserService/v2/internal/service.GetServiceInfo\n\t/home/rodmul/GolandProjects/github.com/Petland/UserService/internal/service/userService.go:135\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).handleInfo.func1\n\t/home/rodmul/GolandProjects/github.com/Petland/UserService/internal/service/clientHandlersFuncs.go:251\nnet/http.HandlerFunc.ServeHTTP\n\t/usr/lib/go-1.18/src/net/http/server.go:2084\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).getRequestID.func1\n\t/home/rodmul/GolandProjects/github.com/Petland/UserService/internal/service/userService.go:93\nnet/http.HandlerFunc.ServeHTTP\n\t/usr/lib/go-1.18/src/net/http/server.go:2084\ngithub.com/gorilla/mux.(*Router).ServeHTTP\n\t/home/rodmul/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210\nnet/http.serverHandler.ServeHTTP\n\t/usr/lib/go-1.18/src/net/http/server.go:2916\nnet/http.(*conn).serve\n\t/usr/lib/go-1.18/src/net/http/server.go:1966"}
+{"level":"info","ts":"2023-01-25T18:46:50.998+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T18:46:51.008+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.000205003,"commandTag":"","pid":4352,"sql":";","args":[]}
+{"level":"info","ts":"2023-01-25T18:46:51.010+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001126575,"rowCount":1,"pid":4352}
+{"level":"info","ts":"2023-01-25T18:46:56.010+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T18:46:56.012+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:11:00.275+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:11:00.285+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":4365,"sql":";","args":[],"time":0.000143849}
+{"level":"info","ts":"2023-01-25T19:11:00.286+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001238894,"rowCount":1,"pid":4365}
+{"level":"info","ts":"2023-01-25T19:11:05.290+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:11:05.294+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:14:00.334+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4365}
+{"level":"info","ts":"2023-01-25T19:17:45.415+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:17:45.427+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":4386,"sql":";","args":[],"time":0.000197964}
+{"level":"info","ts":"2023-01-25T19:17:45.429+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001509829,"rowCount":1,"pid":4386}
+{"level":"info","ts":"2023-01-25T19:17:50.431+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:17:50.432+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:21:56.066+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:21:56.080+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000207266,"commandTag":"","pid":4399,"sql":";"}
+{"level":"info","ts":"2023-01-25T19:21:56.081+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001158373,"rowCount":1,"pid":4399}
+{"level":"info","ts":"2023-01-25T19:22:01.083+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:22:01.088+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:24:35.686+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:24:35.699+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000209659,"commandTag":"","pid":4408}
+{"level":"info","ts":"2023-01-25T19:24:35.700+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","rowCount":1,"pid":4408,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.00101701}
+{"level":"info","ts":"2023-01-25T19:24:40.703+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:24:40.707+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:27:22.116+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:27:22.129+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","pid":4418,"sql":";","args":[],"time":0.000158038,"commandTag":""}
+{"level":"info","ts":"2023-01-25T19:27:22.131+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.001094331,"rowCount":1,"pid":4418,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-01-25T19:27:27.135+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:27:27.137+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:28:05.446+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:28:05.469+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000304167,"commandTag":"","pid":4421}
+{"level":"info","ts":"2023-01-25T19:28:05.471+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001796915,"rowCount":1,"pid":4421}
+{"level":"info","ts":"2023-01-25T19:28:10.475+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:28:10.479+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:29:12.641+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:29:12.665+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000263178,"commandTag":"","pid":4425}
+{"level":"info","ts":"2023-01-25T19:29:12.666+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001050967,"rowCount":1,"pid":4425}
+{"level":"info","ts":"2023-01-25T19:29:17.671+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:29:17.673+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:31:43.091+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:31:43.102+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000187839,"commandTag":"","pid":4434,"sql":";"}
+{"level":"info","ts":"2023-01-25T19:31:43.104+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4434,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001153957,"rowCount":1}
+{"level":"info","ts":"2023-01-25T19:31:48.107+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:31:48.109+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:34:43.103+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4434}
+{"level":"info","ts":"2023-01-25T19:35:59.689+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:35:59.699+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.000158881,"commandTag":"","pid":4448}
+{"level":"info","ts":"2023-01-25T19:35:59.700+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4448,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.000856471,"rowCount":1}
+{"level":"info","ts":"2023-01-25T19:36:04.703+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:36:04.705+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:38:50.447+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:38:50.456+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.000107099,"commandTag":"","pid":4457,"sql":";","args":[]}
+{"level":"info","ts":"2023-01-25T19:38:50.457+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.0007453,"rowCount":1,"pid":4457}
+{"level":"info","ts":"2023-01-25T19:38:55.459+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:39:00.463+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 2 of 3"}
+{"level":"info","ts":"2023-01-25T19:39:05.467+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 3 of 3"}
+{"level":"fatal","ts":"2023-01-25T19:39:05.468+0300","caller":"cmd/main.go:15","msg":"can't connect to API GateWay","stacktrace":"main.main\n\t/home/rodmul/GolandProjects/github.com/Petland/UserService/cmd/main.go:15\nruntime.main\n\t/usr/lib/go-1.18/src/runtime/proc.go:250"}
+{"level":"info","ts":"2023-01-25T19:40:43.744+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:40:43.753+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.000147426,"commandTag":"","pid":4464,"sql":";"}
+{"level":"info","ts":"2023-01-25T19:40:43.754+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001127751,"rowCount":1,"pid":4464}
+{"level":"info","ts":"2023-01-25T19:40:48.759+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:40:48.761+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:49:07.389+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:49:07.401+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","pid":4490,"sql":";","args":[],"time":0.000201096,"commandTag":""}
+{"level":"info","ts":"2023-01-25T19:49:07.403+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4490,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.001275533,"rowCount":1}
+{"level":"info","ts":"2023-01-25T19:49:12.407+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T19:49:12.411+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T19:52:07.402+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4490}
+{"level":"info","ts":"2023-01-25T19:52:10.789+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T19:52:10.809+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":["heat@gmail.com"],"time":0.003473669,"rowCount":1,"pid":4500,"sql":"SELECT EXISTS (SELECT * FROM user_service.public.user_contacts WHERE email = $1)"}
+{"level":"info","ts":"2023-01-25T19:53:20.036+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT EXISTS (SELECT * FROM user_service.public.user_contacts WHERE email = $1)","args":["kiosakisucks@gmail.com"],"time":0.000718076,"rowCount":1,"pid":4500}
+{"level":"info","ts":"2023-01-25T19:53:20.121+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":"begin","args":[],"time":0.000317426,"commandTag":"BEGIN","pid":4500}
+{"level":"info","ts":"2023-01-25T19:53:20.130+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8","Tony","Robinson",0],"time":0.008635885,"commandTag":"INSERT 0 1","pid":4500,"sql":"INSERT INTO user_service.public.user_profile (id, first_name, sur_name, status) VALUES ($1, $2, $3, $4);"}
+{"level":"info","ts":"2023-01-25T19:53:20.132+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":"INSERT INTO user_service.public.user_data (id_profile, password_encoded, password_salt) VALUES ($1, $2, $3);","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8","$2a$10$X21jQqJukdzDx9bjhyg7meY/z1BqJnWLAF2p/W1LQAJ6J2UhCyK2a","wl32reo@SXf8LyNAsG56!PCwkOXf1uhTlL7FgOOusY?93bCNegGiX*Ydu96u"],"time":0.001645677,"commandTag":"INSERT 0 1","pid":4500}
+{"level":"info","ts":"2023-01-25T19:53:20.133+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4500,"sql":"INSERT INTO user_service.public.user_contacts (id_profile, email, mobile_phone, \n\t\t\temail_subscription, show_phone) VALUES ($1, $2, $3, $4, $5);","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8","kiosakisucks@gmail.com","89200845355",false,true],"time":0.001062632,"rowCount":0}
+{"level":"info","ts":"2023-01-25T19:53:20.134+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":"commit","args":[],"time":0.001136171,"commandTag":"COMMIT","pid":4500}
+{"level":"info","ts":"2023-01-25T19:54:09.427+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE email = $1","args":["kiosakisucks@gmail.com"],"time":0.00062911,"rowCount":1,"pid":4500}
+{"level":"info","ts":"2023-01-25T19:54:09.427+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8"],"time":0.000588143,"rowCount":1,"pid":4500,"sql":"SELECT id, id_profile, password_encoded, password_salt \nFROM user_service.public.user_data WHERE id_profile = $1"}
+{"level":"info","ts":"2023-01-25T19:54:09.505+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":"INSERT INTO user_service.public.refresh_sessions\n        (id_profile, id_refresh_token, issued_at, expires_in)\n        VALUES ($1, $2, $3, $4);","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8","f7b30f82-8fc6-4149-9f10-e847422bc9ed","2023-01-25T19:54:09.496150548+03:00","2023-01-25T20:24:09.496150628+03:00"],"time":0.009598446,"commandTag":"INSERT 0 1","pid":4500}
+{"level":"info","ts":"2023-01-25T19:55:10.864+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4500}
+{"level":"info","ts":"2023-01-25T21:09:08.468+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
+{"level":"info","ts":"2023-01-25T21:09:08.477+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.000109402,"commandTag":"","pid":4635,"sql":";","args":[]}
+{"level":"info","ts":"2023-01-25T21:09:08.478+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.000756409,"rowCount":1,"pid":4635,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-01-25T21:09:13.480+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-01-25T21:09:13.481+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-01-25T21:10:29.790+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE email = $1","args":["kiosakisucks@gmail.com"],"time":0.00261752,"rowCount":1,"pid":4635}
+{"level":"info","ts":"2023-01-25T21:10:29.792+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","time":0.001289799,"rowCount":1,"pid":4635,"sql":"SELECT id, id_profile, password_encoded, password_salt \nFROM user_service.public.user_data WHERE id_profile = $1","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8"]}
+{"level":"info","ts":"2023-01-25T21:10:29.897+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":"INSERT INTO user_service.public.refresh_sessions\n        (id_profile, id_refresh_token, issued_at, expires_in)\n        VALUES ($1, $2, $3, $4);","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8","44ded84b-f8ef-4652-b963-16cba03c5713","2023-01-25T21:10:29.887684805+03:00","2023-01-25T21:40:29.887684895+03:00"],"time":0.009484229,"commandTag":"INSERT 0 1","pid":4635}
+{"level":"info","ts":"2023-01-25T21:11:33.418+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE id_profile = $1","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8"],"time":0.00067284,"rowCount":1,"pid":4635}
+{"level":"info","ts":"2023-01-25T21:11:33.419+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":4635,"sql":"SELECT id, first_name, sur_name, status FROM user_service.public.user_profile WHERE id = $1","args":["e628fd94-f3ed-4513-893a-4431dc5abdd8"],"time":0.000407939,"rowCount":1}
+{"level":"info","ts":"2023-01-25T21:12:08.512+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":4635}

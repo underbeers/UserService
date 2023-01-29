@@ -11,12 +11,10 @@ import (
 func ValidateUser(u *models.UserEx) error {
 	validate := validator.New()
 	type fields struct {
-		Phone    string `validate:"required,len=11"`
 		Email    string `validate:"required,email"`
-		Password string `validate:"required,min=6,max=20"`
+		Password string `validate:"required,min=6,max=255"`
 	}
 	f := &fields{
-		Phone:    u.Contacts.MobilePhone,
 		Email:    u.Contacts.Email,
 		Password: u.Data.PasswordEncoded,
 	}
@@ -25,10 +23,6 @@ func ValidateUser(u *models.UserEx) error {
 	if err != nil {
 		return genErr.NewError(err, core.ErrInvalidData)
 	}
-
-	/*if err = ValidateCharset(f.Password); err != nil {
-		return genErr.NewError(err, core.ErrInvalidData)
-	}*/
 
 	return nil
 }

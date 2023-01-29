@@ -1,6 +1,8 @@
 package store
 
 import (
+	"errors"
+	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -13,6 +15,8 @@ type ProfileRepository struct {
 type Profiler interface {
 	CreateNewTx(tx *sqlx.Tx, c *models.Profile) error
 	CreateNew(c *models.Profile) error
+	GetByUserID(id uuid.UUID) (*models.Profile, error)
+	GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error)
 }
 
 type Profile struct {
@@ -30,7 +34,7 @@ func (r *ProfileRepository) CreateNewTx(tx *sqlx.Tx, c *models.Profile) error {
 	c.ID = uuid.New()
 	if _, err := r.store.db.Exec(
 		tx,
-		`INSERT INTO  public.user_profile (id, first_name, sur_name, status) VALUES ($1, $2, $3, $4);`,
+		`INSERT INTO user_service.public.user_profile (id, first_name, sur_name, status) VALUES ($1, $2, $3, $4);`,
 		c.ID,
 		c.FirstName,
 		c.SurName,
@@ -40,4 +44,28 @@ func (r *ProfileRepository) CreateNewTx(tx *sqlx.Tx, c *models.Profile) error {
 	}
 
 	return nil
+}
+
+func (r *ProfileRepository) GetByUserID(id uuid.UUID) (*models.Profile, error) {
+	return r.GetByUserIDTx(nil, id)
+}
+
+func (r *ProfileRepository) GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error) {
+	profile := &models.Profile{}
+	row := r.store.db.QueryRow(tx,
+		`SELECT id, first_name, sur_name, status FROM user_service.public.user_profile WHERE id = $1`, id)
+
+	err := row.StructScan(profile)
+	if err != nil {
+		if errors.Is(err, ErrNotFound) {
+			err = genErr.NewError(err, ErrNotFound, "id", id)
+
+			return nil, err
+		}
+		err = genErr.NewError(err, ErrScanStructFailed)
+
+		return nil, r.store.Rollback(tx, err)
+	}
+
+	return profile, nil
 }

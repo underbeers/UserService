@@ -22,6 +22,7 @@ var (
 	ErrCantRefreshToken    = genErr.New("can't refresh token")
 	ErrInvalidEmail        = genErr.New("invalid email address")
 	ErrValidationFailure   = genErr.New("Password validation failure")
+	ErrCreatingNewJWTMaker = genErr.New("error while creating NewJWTMaker")
 	ErrEncryptPassword     = genErr.New("failed to encrypt password")
 	ErrDecodeJSON          = genErr.New("failed to decode json")
 	ErrEmailEmpty          = genErr.New("email is empty")
@@ -29,4 +30,5 @@ var (
 	ErrInvalidVerification = genErr.New("verification code is invalid")
 	ErrExpiredVerification = genErr.New("verification code is expired")
 	ErrAttemptsLimit       = genErr.New("wrong attempts limit exceeded")
+	ErrMarshalUnmarshal    = genErr.New("can't marshal/unmarshal data")
 )
