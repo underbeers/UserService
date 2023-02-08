@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	accessLifeTime  = 30     // access token lifetime in minutes
+	accessLifeTime  = 100000 // access token lifetime in minutes
 	refreshLifeTime = 100000 // refresh token lifetime in minutes
 )
 
