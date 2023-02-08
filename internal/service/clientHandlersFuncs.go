@@ -209,10 +209,10 @@ func (srv *service) handleRefreshToken() http.HandlerFunc {
 
 func (srv *service) handleUserInfo() http.HandlerFunc {
 	type Response struct {
-		FirstName   string
-		SurName     string
-		MobilePhone string
-		Email       string
+		FirstName   string `json:"firstName"`
+		SurName     string `json:"surName"`
+		MobilePhone string `json:"mobilePhone"`
+		Email       string `json:"email"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -258,6 +258,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 
 			return
 		}
+		srv.respond(w, http.StatusOK, nil)
 	}
 }
 
@@ -383,7 +384,6 @@ func gatewayURL(srv *service) (*url.URL, error) {
 	}
 	gwURL, err := url.Parse(
 		protocol + "://" + domain + ":" + srv.conf.Gateway.Port + baseURL + "hello/")
-	srv.Logger.Info(gwURL)
 	if err != nil {
 		return nil, genErr.NewError(err, ErrConnectAPIGateWay)
 	}
