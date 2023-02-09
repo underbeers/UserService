@@ -17,6 +17,8 @@ type Profiler interface {
 	CreateNew(c *models.Profile) error
 	GetByUserID(id uuid.UUID) (*models.Profile, error)
 	GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error)
+	Delete(id uuid.UUID) error
+	DeleteTx(tx *sqlx.Tx, id uuid.UUID) error
 }
 
 type Profile struct {
@@ -68,4 +70,16 @@ func (r *ProfileRepository) GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Pr
 	}
 
 	return profile, nil
+}
+
+func (r *ProfileRepository) Delete(id uuid.UUID) error {
+	return r.DeleteTx(nil, id)
+}
+
+func (r *ProfileRepository) DeleteTx(tx *sqlx.Tx, id uuid.UUID) error {
+	if err := r.store.db.QueryRow(tx, `DELETE FROM user_service.public.user_profile WHERE id=$1`, id).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
 }

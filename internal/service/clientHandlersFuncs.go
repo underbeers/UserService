@@ -9,6 +9,7 @@ import (
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
+	"git.friends.com/PetLand/UserService/v2/internal/core/user"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
@@ -33,6 +34,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"login/", srv.handleLoginUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/token/", srv.handleRefreshToken()).Methods(http.MethodGet, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/info/", srv.handleUserInfo()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/delete/", srv.handleDeleteProfile()).Methods(http.MethodDelete)
 	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
 }
 
@@ -232,7 +234,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 
 			return
 		}
-		user, err := srv.store.Profile().GetByUserID(id)
+		profile, err := srv.store.Profile().GetByUserID(id)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
@@ -240,8 +242,8 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		}
 
 		resp := &Response{
-			FirstName:   user.FirstName,
-			SurName:     user.SurName,
+			FirstName:   profile.FirstName,
+			SurName:     profile.SurName,
 			MobilePhone: contacts.MobilePhone,
 			Email:       contacts.Email,
 		}
@@ -259,6 +261,23 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			return
 		}
 		srv.respond(w, http.StatusOK, nil)
+	}
+}
+
+func (srv *service) handleDeleteProfile() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := r.Header.Get(userIDAuth)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+
+			return
+		}
+		err := user.DeleteUserProfile(userID, srv.store)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		}
+
+		srv.respond(w, http.StatusNoContent, nil)
 	}
 }
 
