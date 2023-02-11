@@ -1,4 +1,5 @@
 .idea
 *.env
 main.exe
-DOckerfile
+./main
+./conf/db/DBConfig.yml

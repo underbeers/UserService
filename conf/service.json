@@ -28,6 +28,11 @@
       "url": "user/info/",
       "protected": true,
       "methods": ["GET", "OPTIONS"]
+    },
+    {
+      "url": "email/code/",
+      "protected": false,
+      "methods": ["POST", "OPTIONS"]
     }
   ]
 }

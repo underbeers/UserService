@@ -13,6 +13,11 @@ type Config struct {
 	Listen    *Listen  `yaml:"listen"`
 	Gateway   *Gateway `yaml:"gateway"`
 	VersionDB int      `yaml:"db_version"`
+	EmailFrom string   `yaml:"EMAIL_FROM"`
+	SMTPHost  string   `yaml:"SMTP_HOST"`
+	SMTPPass  string   `yaml:"SMTP_PASS"`
+	SMTPPort  int      `yaml:"SMTP_PORT"`
+	SMTPUser  string   `yaml:"SMTP_USER"`
 }
 
 type DB struct {
