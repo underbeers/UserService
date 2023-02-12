@@ -21,6 +21,8 @@ type Contacter interface {
 	GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error)
 	GetByUserProfileID(id uuid.UUID) (*models.Contacts, error)
 	GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error)
+	Delete(profileID uuid.UUID) error
+	DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error
 }
 
 func (r *ContactsRepository) Create(c *models.Contacts) error {
@@ -110,4 +112,18 @@ func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*m
 	}
 
 	return contacts, nil
+}
+
+func (r *ContactsRepository) Delete(profileID uuid.UUID) error {
+	return r.DeleteTx(nil, profileID)
+}
+
+func (r *ContactsRepository) DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error {
+	if err := r.store.db.QueryRow(tx,
+		`DELETE FROM user_service.public.user_contacts WHERE id_profile=$1`, profileID,
+	).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
 }

@@ -2,4 +2,3 @@
 *.env
 main.exe
 ./main
-./conf/db/DBConfig.yml
