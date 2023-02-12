@@ -30,6 +30,11 @@
       "methods": ["GET", "OPTIONS"]
     },
     {
+      "url": "email/code/",
+      "protected": false,
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
       "url": "user/delete/",
       "protected": true,
       "methods": ["DELETE", "OPTIONS"]

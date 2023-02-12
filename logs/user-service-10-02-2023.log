@@ -1,0 +1,61 @@
+{"level":"info","ts":"2023-02-10T00:30:19.814+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:30:20.267+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0755346,"commandTag":"","pid":1594}
+{"level":"info","ts":"2023-02-10T00:30:20.452+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":1594,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1823631,"rowCount":1}
+{"level":"info","ts":"2023-02-10T00:30:25.454+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:30:25.455+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:30:25.464+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T00:33:20.286+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":1594}
+{"level":"info","ts":"2023-02-10T00:36:18.645+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:36:19.046+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0815598,"commandTag":"","pid":1607}
+{"level":"info","ts":"2023-02-10T00:36:19.333+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":1607,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.2855877,"rowCount":1}
+{"level":"info","ts":"2023-02-10T00:36:24.342+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:36:24.343+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:36:24.345+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T00:38:15.442+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:38:15.887+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0770308,"commandTag":"","pid":1612}
+{"level":"info","ts":"2023-02-10T00:38:16.048+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1605612,"rowCount":1,"pid":1612}
+{"level":"info","ts":"2023-02-10T00:38:21.052+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:38:21.052+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:38:21.056+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T00:41:15.898+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":1612}
+{"level":"info","ts":"2023-02-10T00:44:14.229+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:44:14.656+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":1625,"sql":";","args":[],"time":0.0795638}
+{"level":"info","ts":"2023-02-10T00:44:14.809+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","time":0.1517586,"rowCount":1,"pid":1625,"sql":"SELECT version, dirty FROM schema_migrations;","args":[]}
+{"level":"info","ts":"2023-02-10T00:44:19.815+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:44:19.815+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:44:19.818+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T00:46:24.009+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:46:24.393+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","pid":1630,"sql":";","args":[],"time":0.0774594,"commandTag":""}
+{"level":"info","ts":"2023-02-10T00:46:24.550+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.1560429,"rowCount":1,"pid":1630,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-02-10T00:46:29.556+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:46:29.556+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:46:29.559+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"error","ts":"2023-02-10T00:46:33.374+0300","caller":"service/utils.go:48","msg":"<nil>wrong type for login; 535 5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials q6-20020ac25a06000000b004d35fea344dsm155102lfn.202 - gsmtp; ","stacktrace":"git.friends.com/PetLand/UserService/v2/internal/service.(*service).error\n\tD:/Course23/UserService/internal/service/utils.go:48\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).handleSendEmail.func1\n\tD:/Course23/UserService/internal/service/clientHandlersFuncs.go:130\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).getRequestID.func1\n\tD:/Course23/UserService/internal/service/userService.go:93\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngithub.com/gorilla/mux.(*Router).ServeHTTP\n\tC:/Users/Елена/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210\nnet/http.serverHandler.ServeHTTP\n\tD:/Go/src/net/http/server.go:2947\nnet/http.(*conn).serve\n\tD:/Go/src/net/http/server.go:1991"}
+{"level":"info","ts":"2023-02-10T00:49:24.405+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":1630}
+{"level":"info","ts":"2023-02-10T00:50:37.411+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T00:50:37.792+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.0738763,"commandTag":"","pid":1640,"sql":";"}
+{"level":"info","ts":"2023-02-10T00:50:37.945+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1532359,"rowCount":1,"pid":1640}
+{"level":"info","ts":"2023-02-10T00:50:42.950+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T00:50:42.950+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T00:50:42.952+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"error","ts":"2023-02-10T00:50:52.384+0300","caller":"service/utils.go:48","msg":"<nil>wrong type for login; 535 5.7.0 NEOBHODIM parol prilozheniya https://help.mail.ru/mail/security/protection/external / Application password is REQUIRED; ","stacktrace":"git.friends.com/PetLand/UserService/v2/internal/service.(*service).error\n\tD:/Course23/UserService/internal/service/utils.go:48\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).handleSendEmail.func1\n\tD:/Course23/UserService/internal/service/clientHandlersFuncs.go:130\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).getRequestID.func1\n\tD:/Course23/UserService/internal/service/userService.go:93\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngithub.com/gorilla/mux.(*Router).ServeHTTP\n\tC:/Users/Елена/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210\nnet/http.serverHandler.ServeHTTP\n\tD:/Go/src/net/http/server.go:2947\nnet/http.(*conn).serve\n\tD:/Go/src/net/http/server.go:1991"}
+{"level":"info","ts":"2023-02-10T15:41:04.250+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T15:41:04.660+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0753402,"commandTag":"","pid":9979}
+{"level":"info","ts":"2023-02-10T15:41:04.820+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","time":0.1597681,"rowCount":1,"pid":9979,"sql":"SELECT version, dirty FROM schema_migrations;","args":[]}
+{"level":"info","ts":"2023-02-10T15:41:09.822+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T15:41:09.823+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T15:41:09.827+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T15:57:39.007+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T15:57:39.416+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":10014,"sql":";","args":[],"time":0.0880206}
+{"level":"info","ts":"2023-02-10T15:57:39.568+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1515775,"rowCount":1,"pid":10014}
+{"level":"info","ts":"2023-02-10T15:57:44.573+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T15:57:44.574+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T15:57:44.577+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-10T16:00:39.418+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":10014}
+{"level":"info","ts":"2023-02-10T16:26:01.502+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-10T16:26:01.906+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.0713094,"commandTag":"","pid":10073,"sql":";"}
+{"level":"info","ts":"2023-02-10T16:26:02.050+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1430173,"rowCount":1,"pid":10073}
+{"level":"info","ts":"2023-02-10T16:26:07.053+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-10T16:26:07.054+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-10T16:26:07.058+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"error","ts":"2023-02-10T16:26:11.953+0300","caller":"service/utils.go:48","msg":"<nil>wrong type for login; 535 5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials b23-20020ac24117000000b004b585ff1fcdsm315163lfi.273 - gsmtp; ","stacktrace":"git.friends.com/PetLand/UserService/v2/internal/service.(*service).error\n\tD:/Course23/UserService/internal/service/utils.go:48\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).handleSendEmail.func1\n\tD:/Course23/UserService/internal/service/clientHandlersFuncs.go:130\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngit.friends.com/PetLand/UserService/v2/internal/service.(*service).getRequestID.func1\n\tD:/Course23/UserService/internal/service/userService.go:93\nnet/http.HandlerFunc.ServeHTTP\n\tD:/Go/src/net/http/server.go:2109\ngithub.com/gorilla/mux.(*Router).ServeHTTP\n\tC:/Users/Елена/go/pkg/mod/github.com/gorilla/mux@v1.8.0/mux.go:210\nnet/http.serverHandler.ServeHTTP\n\tD:/Go/src/net/http/server.go:2947\nnet/http.(*conn).serve\n\tD:/Go/src/net/http/server.go:1991"}

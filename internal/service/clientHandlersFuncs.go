@@ -9,6 +9,7 @@ import (
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
+	"git.friends.com/PetLand/UserService/v2/internal/core/utils"
 	"git.friends.com/PetLand/UserService/v2/internal/core/user"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
@@ -37,6 +38,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"user/delete/", srv.handleDeleteProfile()).Methods(http.MethodDelete, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/password/change/", srv.handleChangePassword()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
+	srv.router.HandleFunc(baseURL+"email/code/", srv.handleSendEmail()).Methods(http.MethodPost, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -113,6 +115,26 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 
 		srv.respond(w, http.StatusCreated, u.ID)
 	}
+}
+
+func (srv *service) handleSendEmail() http.HandlerFunc {
+	type Request struct {
+		Email string `json:"email"`
+		Code  string `json:"code"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+		err := utils.SendEmail(req.Email, req.Code)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+			return
+		}
+	}
+
 }
 
 func (srv *service) handleLoginUser() http.HandlerFunc {
