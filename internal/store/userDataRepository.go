@@ -19,6 +19,8 @@ type UserDater interface {
 	GetByUserID(id uuid.UUID) (*models.Data, error)
 	Delete(profileID uuid.UUID) error
 	DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error
+	ChangePassword(profileID uuid.UUID, pwd string, salt string) error
+	ChangePasswordTx(tx *sqlx.Tx, profileID uuid.UUID, pwd string, salt string) error
 }
 
 func (r *UserDataRepository) Create(d *models.Data) error {
@@ -68,6 +70,20 @@ func (r *UserDataRepository) Delete(profileID uuid.UUID) error {
 
 func (r *UserDataRepository) DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error {
 	if err := r.store.db.QueryRow(tx, `DELETE FROM user_service.public.user_data WHERE id_profile=$1`, profileID).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
+}
+
+func (r *UserDataRepository) ChangePassword(profileID uuid.UUID, pwd string, salt string) error {
+	return r.ChangePasswordTx(nil, profileID, pwd, salt)
+}
+
+func (r *UserDataRepository) ChangePasswordTx(tx *sqlx.Tx, profileID uuid.UUID, pwd string, salt string) error {
+	if err := r.store.db.QueryRow(tx,
+		`UPDATE user_service.public.user_data SET password_encoded = $1, password_salt = $2 WHERE id_profile = $3`,
+		pwd, salt, profileID).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
 
