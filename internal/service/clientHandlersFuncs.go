@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"git.friends.com/PetLand/UserService/v2/internal/config"
 	"git.friends.com/PetLand/UserService/v2/internal/core"
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
-	"git.friends.com/PetLand/UserService/v2/internal/core/utils"
 	"git.friends.com/PetLand/UserService/v2/internal/core/user"
+	"git.friends.com/PetLand/UserService/v2/internal/core/utils"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
@@ -395,7 +394,7 @@ func (srv *service) handleInfo() http.HandlerFunc {
 func HelloAPIGateway(srv *service) error {
 	var domain string
 
-	cfg := config.ReadConfig()
+	cfg := srv.conf
 	if srv.conf.DebugMode {
 		domain = cfg.Gateway.IP
 	} else {
@@ -406,8 +405,6 @@ func HelloAPIGateway(srv *service) error {
 	if err != nil {
 		return genErr.NewError(err, ErrConnectAPIGateWay, msg, "can't parse ur for endpoint 'hello/'")
 	}
-
-	//endpoints := config.ReadServicesList()
 
 	info := &models.Hello{
 		Name:      "user",
