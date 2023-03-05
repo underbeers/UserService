@@ -9,8 +9,8 @@ import (
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
 	"git.friends.com/PetLand/UserService/v2/internal/core/signup"
-	"git.friends.com/PetLand/UserService/v2/internal/core/utils"
 	"git.friends.com/PetLand/UserService/v2/internal/core/user"
+	"git.friends.com/PetLand/UserService/v2/internal/core/utils"
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
@@ -39,6 +39,9 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"user/password/change/", srv.handleChangePassword()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
 	srv.router.HandleFunc(baseURL+"email/code/", srv.handleSendEmail()).Methods(http.MethodPost, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"password/refresh/", srv.handleForgotPassword()).Methods(http.MethodPost, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"password/reset/", srv.handleResetPassword()).Methods(http.MethodPatch, http.MethodOptions)
+
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -348,6 +351,66 @@ func (srv *service) handleChangePassword() http.HandlerFunc {
 			return
 		}
 	}
+}
+
+func (srv *service) handleForgotPassword() http.HandlerFunc {
+	type Request struct {
+		Email string `json:"email"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+		contacts, err := srv.store.Contacts().GetByEmail(req.Email)
+		if err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+
+		if err := user.ForgotPassword(contacts, req.Email, srv.store); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+	}
+}
+
+func (srv *service) handleResetPassword() http.HandlerFunc {
+	type Request struct {
+		ProfileID   string `json:"profileID"`
+		NewPassword string `json:"newPassword"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+
+		profileID, err := uuid.Parse(req.ProfileID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, core.ErrParseUUID, r.Context())
+
+			return
+		}
+
+		//data, err := srv.store.Contacts().GetByUserProfileID(req.ProfileID)
+		data, err := srv.store.UserData().GetByUserID(profileID)
+		if err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+		}
+
+		if err := user.ChangePassword(data, req.NewPassword, srv.store); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+	}
+
 }
 
 func getAuthHeader(header string) (string, error) {

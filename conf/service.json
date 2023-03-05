@@ -43,6 +43,16 @@
       "url": "user/password/change/",
       "protected": true,
       "methods": ["PATCH", "OPTIONS"]
+    },
+    {
+      "url": "password/refresh/",
+      "protected": false,
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "url": "password/reset/",
+      "protected": false,
+      "methods": ["PATCH", "OPTIONS"]
     }
   ]
 }
