@@ -5,52 +5,52 @@
   "label": "pl_user_service",
   "endpoints": [
     {
-      "url": "helloMessage/",
+      "url": "helloMessage",
       "protected": false,
       "methods": ["GET"]
     },
     {
-      "url": "registration/new/",
+      "url": "registration/new",
       "protected": false,
       "methods": ["POST", "OPTIONS"]
     },
     {
-      "url": "login/",
+      "url": "login",
       "protected": false,
       "methods": ["POST","OPTIONS"]
     },
     {
-      "url": "login/token/",
+      "url": "login/token",
       "protected": true,
       "methods": ["GET", "OPTIONS"]
     },
     {
-      "url": "user/info/",
+      "url": "user/info",
       "protected": true,
       "methods": ["GET", "OPTIONS"]
     },
     {
-      "url": "email/code/",
+      "url": "email/code",
       "protected": false,
       "methods": ["POST", "OPTIONS"]
     },
     {
-      "url": "user/delete/",
+      "url": "user/delete",
       "protected": true,
       "methods": ["DELETE", "OPTIONS"]
     },
     {
-      "url": "user/password/change/",
+      "url": "user/password/change",
       "protected": true,
       "methods": ["PATCH", "OPTIONS"]
     },
     {
-      "url": "password/refresh/",
+      "url": "password/refresh",
       "protected": false,
       "methods": ["POST", "OPTIONS"]
     },
     {
-      "url": "password/reset/",
+      "url": "password/reset",
       "protected": false,
       "methods": ["PATCH", "OPTIONS"]
     }
