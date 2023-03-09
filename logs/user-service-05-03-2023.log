@@ -1,0 +1,12 @@
+{"level":"info","ts":"2023-03-05T19:00:15.597+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-03-05T19:00:15.981+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.0719278,"commandTag":"","pid":4017,"sql":";","args":[]}
+{"level":"info","ts":"2023-03-05T19:00:16.130+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1490628,"rowCount":1,"pid":4017}
+{"level":"info","ts":"2023-03-05T19:00:21.142+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-03-05T19:00:21.160+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-03-05T19:00:45.915+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","rowCount":1,"pid":4017,"sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE email = $1","args":["lenkavorobuchek@mail.ru"],"time":0.1447759}
+{"level":"info","ts":"2023-03-05T19:08:16.863+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-03-05T19:08:17.238+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","commandTag":"","pid":4034,"sql":";","args":[],"time":0.0727644}
+{"level":"info","ts":"2023-03-05T19:08:17.400+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","args":[],"time":0.1612815,"rowCount":1,"pid":4034,"sql":"SELECT version, dirty FROM schema_migrations;"}
+{"level":"info","ts":"2023-03-05T19:08:22.402+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-03-05T19:08:22.406+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-03-05T19:08:24.940+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE email = $1","args":["lenkavorobuchek@mail.ru"],"time":0.2663392,"rowCount":1,"pid":4034}
