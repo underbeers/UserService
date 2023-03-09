@@ -1,0 +1,13 @@
+{"level":"info","ts":"2023-02-17T14:17:12.511+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-17T14:17:13.518+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.102190794,"commandTag":"","pid":36934}
+{"level":"info","ts":"2023-02-17T14:17:13.723+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","pid":36934,"sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.204465264,"rowCount":1}
+{"level":"info","ts":"2023-02-17T14:17:18.726+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-17T14:17:18.726+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-17T14:17:18.728+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-02-17T14:20:13.519+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":36934}
+{"level":"info","ts":"2023-02-17T20:07:09.493+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-02-17T20:07:10.151+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","time":0.105481169,"commandTag":"","pid":37638,"sql":";","args":[]}
+{"level":"info","ts":"2023-02-17T20:07:10.455+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.303974411,"rowCount":1,"pid":37638}
+{"level":"info","ts":"2023-02-17T20:07:15.460+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-02-17T20:07:15.460+0300","caller":"service/clientHandlersFuncs.go:408","msg":"http://127.0.0.1:6002/api/v1/hello/"}
+{"level":"info","ts":"2023-02-17T20:07:15.462+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
