@@ -36,7 +36,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"user/info", srv.handleUserInfo()).Methods(http.MethodGet, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/delete", srv.handleDeleteProfile()).Methods(http.MethodDelete, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/password/change", srv.handleChangePassword()).Methods(http.MethodPatch, http.MethodOptions)
-	srv.router.HandleFunc(baseURL+"endpoint-info", srv.handleInfo()).Methods(http.MethodGet)
+	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
 	srv.router.HandleFunc(baseURL+"email/code", srv.handleSendEmail()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/refresh", srv.handleForgotPassword()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/reset", srv.handleResetPassword()).Methods(http.MethodPatch, http.MethodOptions)
