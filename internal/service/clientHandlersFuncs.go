@@ -378,7 +378,7 @@ func (srv *service) handleForgotPassword() http.HandlerFunc {
 
 func (srv *service) handleResetPassword() http.HandlerFunc {
 	type Request struct {
-		ProfileID   string `json:"profileID"`
+		HashID      string `json:"hashID"`
 		NewPassword string `json:"newPassword"`
 	}
 
@@ -389,15 +389,13 @@ func (srv *service) handleResetPassword() http.HandlerFunc {
 			return
 		}
 
-		profileID, err := uuid.Parse(req.ProfileID)
+		profileID, err := srv.store.Contacts().GetByHashID(req.HashID)
 		if err != nil {
-			srv.error(w, http.StatusInternalServerError, core.ErrParseUUID, r.Context())
-
-			return
+			srv.error(w, http.StatusBadRequest, err, r.Context())
 		}
 
 		//data, err := srv.store.Contacts().GetByUserProfileID(req.ProfileID)
-		data, err := srv.store.UserData().GetByUserID(profileID)
+		data, err := srv.store.UserData().GetByUserID(profileID.ProfileID)
 		if err != nil {
 			srv.error(w, http.StatusBadRequest, err, r.Context())
 		}
@@ -406,6 +404,11 @@ func (srv *service) handleResetPassword() http.HandlerFunc {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
+		}
+
+		err2 := srv.store.Contacts().InsertHashID(profileID.ProfileID, "NULL")
+		if err2 != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
 		}
 	}
 

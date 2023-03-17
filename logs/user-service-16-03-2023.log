@@ -1,0 +1,6 @@
+{"level":"info","ts":"2023-03-16T18:58:24.219+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
+{"level":"info","ts":"2023-03-16T18:58:24.611+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","args":[],"time":0.0866924,"commandTag":"","pid":9357,"sql":";"}
+{"level":"info","ts":"2023-03-16T18:58:24.768+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT version, dirty FROM schema_migrations;","args":[],"time":0.1566058,"rowCount":1,"pid":9357}
+{"level":"info","ts":"2023-03-16T18:58:29.781+0300","caller":"service/userService.go:58","msg":"Attempt to connect to APIGateway 1 of 3"}
+{"level":"info","ts":"2023-03-16T18:58:29.798+0300","caller":"service/userService.go:73","msg":"Start to listen to{port 15 0 6001 <nil>}"}
+{"level":"info","ts":"2023-03-16T19:00:16.465+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Query","sql":"SELECT id, id_profile, email, mobile_phone, show_phone \n\t\t\tFROM user_service.public.user_contacts WHERE email = $1","args":["lenkavorobuchek@mail.ru"],"time":0.151751,"rowCount":1,"pid":9357}

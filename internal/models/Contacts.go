@@ -10,4 +10,5 @@ type Contacts struct {
 	EmailSubscription bool      `db:"email_subscription"`
 	MobilePhone       string    `db:"mobile_phone"`
 	ShowPhone         bool      `db:"show_phone"`
+	HashID            string    `db:"hash_id"`
 }
