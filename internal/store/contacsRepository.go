@@ -21,6 +21,10 @@ type Contacter interface {
 	GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error)
 	GetByUserProfileID(id uuid.UUID) (*models.Contacts, error)
 	GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error)
+	GetByHashID(hash string) (*models.Contacts, error)
+	GetByHashIDTx(tx *sqlx.Tx, hash string) (*models.Contacts, error)
+	InsertHashID(profileID uuid.UUID, hash string) error
+	InsertHashIDTx(tx *sqlx.Tx, profileID uuid.UUID, hash string) error
 	Delete(profileID uuid.UUID) error
 	DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error
 }
@@ -112,6 +116,45 @@ func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*m
 	}
 
 	return contacts, nil
+}
+
+func (r *ContactsRepository) GetByHashID(hash string) (*models.Contacts, error) {
+	return r.GetByHashIDTx(nil, hash)
+}
+
+func (r *ContactsRepository) GetByHashIDTx(tx *sqlx.Tx, hash string) (*models.Contacts, error) {
+	contacts := &models.Contacts{}
+	row := r.store.db.QueryRow(tx,
+		`SELECT id, id_profile, email, mobile_phone, show_phone, hash_id 
+			FROM user_service.public.user_contacts WHERE hash_id = $1`, hash)
+
+	err := row.StructScan(contacts)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = genErr.NewError(err, ErrNotFound, "hash_id", hash)
+
+			return nil, err
+		}
+		err = genErr.NewError(err, ErrScanStructFailed)
+
+		return nil, r.store.Rollback(tx, err)
+	}
+
+	return contacts, nil
+}
+
+func (r *ContactsRepository) InsertHashID(profileID uuid.UUID, hash string) error {
+	return r.InsertHashIDTx(nil, profileID, hash)
+}
+
+func (r *ContactsRepository) InsertHashIDTx(tx *sqlx.Tx, profileID uuid.UUID, hash string) error {
+	if err := r.store.db.QueryRow(
+		tx,
+		`UPDATE user_service.public.user_contacts SET hash_id = $1 WHERE id_profile = $2`, hash, profileID).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
 }
 
 func (r *ContactsRepository) Delete(profileID uuid.UUID) error {
