@@ -65,31 +65,20 @@ func GetConfig(debugMode bool) *Config {
 		logger.Print(help)
 		logger.Fatal(err)
 	}
+	instance.Gateway = &Gateway{
+		IP:   getEnv("GATEWAY_IP", "127.0.0.1"),
+		Port: getEnv("GATEWAY_PORT", "6002"),
+	}
 
-	if debugMode {
-		dbConfigName := "DBConfig"
-		if err := cleanenv.ReadConfig(fmt.Sprintf("./conf/db/%s.yml", dbConfigName), instance.DB); err != nil {
-			help, _ := cleanenv.GetDescription(instance, nil)
-			logger.Print(help)
-			logger.Fatal(err)
-		}
-	} else {
-		instance.Gateway = &Gateway{
-			IP:    getEnv("GATEWAY_IP", ""),
-			Port:  getEnv("GATEWAY_PORT", ""),
-			Label: getEnv("GATEWAY_LABEL", ""),
-		}
+	instance.Listen.IP = getEnv("USERSERVICE_IP", "127.0.0.1")
+	instance.Listen.Port = getEnv("USERSERVICE_PORT", "6001")
 
-		instance.Listen.IP = "127.0.0.1"
-		instance.Listen.Port = "6001"
-
-		instance.DB = &DB{
-			Host:       getEnv("POSTGRES_HOST", ""),
-			Port:       getEnv("POSTGRES_PORT", ""),
-			NameDB:     getEnv("POSTGRES_DB_NAME", ""),
-			UserName:   getEnv("POSTGRES_USER", ""),
-			DBPassword: getEnv("POSTGRES_PASSWORD", ""),
-		}
+	instance.DB = &DB{
+		Host:       getEnv("POSTGRES_HOST", ""),
+		Port:       getEnv("POSTGRES_PORT", ""),
+		NameDB:     getEnv("POSTGRES_DB_NAME", ""),
+		UserName:   getEnv("POSTGRES_USER", ""),
+		DBPassword: getEnv("POSTGRES_PASSWORD", ""),
 	}
 
 	return instance

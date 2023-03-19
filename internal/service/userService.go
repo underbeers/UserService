@@ -43,6 +43,11 @@ func NewService(cfg *config.Config) *service {
 }
 
 func (srv *service) Start() error {
+
+	srv.Logger.Info("Config variables: ")
+	srv.Logger.Infof("GATEWAY_PORT: %v", srv.conf.Gateway.Port)
+	srv.Logger.Infof("GATEWAY_IP: %v", srv.conf.Gateway.IP)
+
 	database, err := db.NewDB(srv.conf, srv.Logger.Desugar())
 	if err != nil {
 		srv.Logger.Fatal("Can't initialize connection to database", zap.Error(err))
