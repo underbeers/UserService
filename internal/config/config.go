@@ -66,12 +66,12 @@ func GetConfig(debugMode bool) *Config {
 		logger.Fatal(err)
 	}
 	instance.Gateway = &Gateway{
-		IP:   getEnv("GATEWAY_IP", "127.0.0.1"),
-		Port: getEnv("GATEWAY_PORT", "6002"),
+		IP:   getEnv("GATEWAY_IP", ""),
+		Port: getEnv("GATEWAY_PORT", ""),
 	}
 
-	instance.Listen.IP = getEnv("USERSERVICE_IP", "127.0.0.1")
-	instance.Listen.Port = getEnv("USERSERVICE_PORT", "6001")
+	instance.Listen.IP = getEnv("USERSERVICE_IP", "")
+	instance.Listen.Port = getEnv("USERSERVICE_PORT", "")
 
 	instance.DB = &DB{
 		Host:       getEnv("POSTGRES_HOST", ""),
