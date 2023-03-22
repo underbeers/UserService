@@ -1,14 +1,19 @@
-FROM golang:1.18-alpine
+FROM golang:1.18-alpine AS build
+
+WORKDIR /build
+
+COPY . .
+
+RUN go mod download
+RUN go build -o /build/user_service /build/cmd/main.go
+
+FROM alpine:latest
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
-
-COPY . ./
-
-RUN go build -o ./user_service ./cmd/main.go
+COPY ./conf ./conf
+COPY ./service.json ./service.json
+COPY --from=build /build/user_service .
 
 ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 ENV POSTGRES_HOST=$POSTGRES_HOST
@@ -17,9 +22,10 @@ ENV POSTGRES_PORT=$POSTGRES_PORT
 ENV POSTGRES_DB_NAME=$POSTGRES_DB_NAME
 ENV GATEWAY_PORT=$GATEWAY_PORT
 ENV GATEWAY_IP=$GATEWAY_IP
-ENV USERSERVICE_IP=$USERSERVICE_IP
 ENV USERSERVICE_PORT=$USERSERVICE_PORT
+ENV USERSERVICE_IP=$USERSERVICE_IP
+ENV DOMAIN_IN_EMAIL=$DOMAIN_IN_EMAIL
 
-EXPOSE 6001
+EXPOSE $USERSERVICE_IP
 
 CMD [ "./user_service" ]
