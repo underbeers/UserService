@@ -35,7 +35,7 @@ const (
 )
 
 func NewService(cfg *config.Config) *service {
-	logger := NewLogger(cfg.DebugMode)
+	logger := NewLogger()
 	srv := &service{Logger: logger, conf: cfg, router: mux.NewRouter()}
 	srv.registerHandlers()
 
@@ -44,6 +44,7 @@ func NewService(cfg *config.Config) *service {
 
 func (srv *service) Start() error {
 
+	srv.Logger.Infof("Start to listen to port %s", srv.conf.Listen.Port)
 	srv.Logger.Info("Config variables: ")
 	srv.Logger.Infof("GATEWAY_PORT: %v", srv.conf.Gateway.Port)
 	srv.Logger.Infof("GATEWAY_IP: %v", srv.conf.Gateway.IP)
@@ -85,10 +86,6 @@ func (srv *service) registerHandlers() {
 	srv.registerClientHandlers()
 }
 
-func (srv *service) DebugModeRunning() bool {
-	return srv.conf.DebugMode
-}
-
 func (srv *service) getRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		type xRequestIDKey string
@@ -127,12 +124,11 @@ func GetServiceInfo(srv *service) *config.Service {
 		srv.Logger.Fatalf("failed to getHandles, %v", err)
 	}
 
-	cfg := config.ReadConfig()
 	instance := config.Service{
 		Name:      "user",
 		Label:     "pl_user_service",
-		IP:        cfg.Listen.IP,
-		Port:      cfg.Listen.Port,
+		IP:        srv.conf.Listen.IP,
+		Port:      srv.conf.Listen.Port,
 		Endpoints: nil,
 	}
 	unprotected, err := getUnprotected()

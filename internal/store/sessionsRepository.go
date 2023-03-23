@@ -28,7 +28,7 @@ func (s *SessionRepository) Create(rs *models.RefreshSession) error {
 func (s *SessionRepository) CreateTx(tx *sqlx.Tx, rs *models.RefreshSession) error {
 	if _, err := s.store.db.Exec(
 		tx,
-		`INSERT INTO user_service.public.refresh_sessions
+		`INSERT INTO refresh_sessions
         (id_profile, id_refresh_token, issued_at, expires_in)
         VALUES ($1, $2, $3, $4);`,
 		rs.ProfileID,
@@ -50,7 +50,7 @@ func (s *SessionRepository) getSessionByTokenIDTx(tx *sqlx.Tx, uid uuid.UUID) (*
 	session := &models.RefreshSession{}
 
 	row := s.store.db.QueryRow(tx, `SELECT id_profile, id_refresh_token, issued_at, expires_in 
-		FROM user_service.public.refresh_sessions WHERE id_refresh_token=$1;`, uid)
+		FROM refresh_sessions WHERE id_refresh_token=$1;`, uid)
 
 	err := row.StructScan(session)
 	if err != nil {
@@ -71,7 +71,7 @@ func (s *SessionRepository) DeleteUserSessions(uid uuid.UUID) error {
 
 func (s *SessionRepository) DeleteUserSessionsTx(tx *sqlx.Tx, uid uuid.UUID) error {
 	_, err := s.store.db.Exec(tx,
-		`DELETE FROM user_service.public.refresh_sessions WHERE id_profile = $1`, uid)
+		`DELETE FROM refresh_sessions WHERE id_profile = $1`, uid)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = genErr.NewError(err, ErrNotFound, "UUID", uid)

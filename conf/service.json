@@ -1,7 +1,5 @@
 {
   "name": "user",
-  "port": "6001",
-  "ip": "127.0.0.1",
   "label": "pl_user_service",
   "endpoints": [
     {

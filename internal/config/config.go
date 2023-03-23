@@ -7,8 +7,9 @@ import (
 	"os"
 )
 
+const versionDB = 3
+
 type Config struct {
-	DebugMode bool
 	DB        *DB
 	Listen    *Listen  `yaml:"listen"`
 	Gateway   *Gateway `yaml:"gateway"`
@@ -56,50 +57,39 @@ func (db *DB) GetConnectionString() string {
 		db.UserName, db.DBPassword, db.Host, db.Port, db.NameDB)
 }
 
-func GetConfig(debugMode bool) *Config {
-	logger := log.Default()
-	//logger.Print("Read application configuration")
-	instance := &Config{DB: &DB{}, DebugMode: debugMode}
-	if err := cleanenv.ReadConfig("./conf/config.yml", instance); err != nil {
-		help, _ := cleanenv.GetDescription(instance, nil)
-		logger.Print(help)
-		logger.Fatal(err)
-	}
-	instance.Gateway = &Gateway{
-		IP:   getEnv("GATEWAY_IP", "127.0.0.1"),
-		Port: getEnv("GATEWAY_PORT", "6002"),
-	}
+func GetConfig() *Config {
 
-	instance.Listen.IP = getEnv("USERSERVICE_IP", "127.0.0.1")
-	instance.Listen.Port = getEnv("USERSERVICE_PORT", "6001")
+	logger := log.Default()
+	logger.Print("Read application configuration")
+
+	instance := &Config{DB: &DB{}}
+	instance.Gateway = &Gateway{
+		IP:   getEnv("GATEWAY_IP"),
+		Port: getEnv("GATEWAY_PORT"),
+	}
+	instance.VersionDB = versionDB
+	instance.Listen = &Listen{}
+	instance.Listen.IP = getEnv("USERSERVICE_IP")
+	instance.Listen.Port = getEnv("USERSERVICE_PORT")
 
 	instance.DB = &DB{
-		Host:       getEnv("POSTGRES_HOST", ""),
-		Port:       getEnv("POSTGRES_PORT", ""),
-		NameDB:     getEnv("POSTGRES_DB_NAME", ""),
-		UserName:   getEnv("POSTGRES_USER", ""),
-		DBPassword: getEnv("POSTGRES_PASSWORD", ""),
+		Host:       getEnv("POSTGRES_HOST"),
+		Port:       getEnv("POSTGRES_PORT"),
+		NameDB:     getEnv("POSTGRES_DB_NAME"),
+		UserName:   getEnv("POSTGRES_USER"),
+		DBPassword: getEnv("POSTGRES_PASSWORD"),
 	}
 
 	return instance
 }
 
-func getEnv(key string, defaultVal string) string {
+func getEnv(key string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value
 	}
 
-	return defaultVal
-}
-
-func ReadConfig() *Config {
-	instance := &Config{}
-	err := cleanenv.ReadConfig("./conf/config.yml", instance)
-	if err != nil {
-		log.Fatalf("can't read config. %s", err.Error())
-	}
-
-	return instance
+	log.Default().Printf("failed to get env %s\n", key)
+	return ""
 }
 
 func ReadServicesList() *Service {

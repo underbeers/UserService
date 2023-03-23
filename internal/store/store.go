@@ -7,15 +7,14 @@ import (
 )
 
 type Store struct {
-	db                     *DB
-	logger                 *zap.SugaredLogger
-	Itx                    TX
-	profileRepository      Profiler
-	contactsRepository     Contacter
-	userDataRepository     UserDater
-	expertDataRepository   ExpertDater
-	verificationRepository Verificationer
-	sessionRepository      Sessioner
+	db                   *DB
+	logger               *zap.SugaredLogger
+	Itx                  TX
+	profileRepository    Profiler
+	contactsRepository   Contacter
+	userDataRepository   UserDater
+	expertDataRepository ExpertDater
+	sessionRepository    Sessioner
 }
 
 type TX interface {
@@ -77,18 +76,6 @@ func (s *Store) Contacts() Contacter {
 	}
 
 	return s.contactsRepository
-}
-
-func (s *Store) Verification() Verificationer {
-	if s.verificationRepository != nil {
-		return s.verificationRepository
-	}
-
-	s.verificationRepository = &VerificationRepository{
-		store: s,
-	}
-
-	return s.verificationRepository
 }
 
 func (s *Store) TokenSession() Sessioner {

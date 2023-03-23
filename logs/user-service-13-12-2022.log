@@ -1,4 +1,0 @@
-{"level":"info","ts":"2022-12-13T22:00:51.335+0300","caller":"service/utils.go:37","msg":"It's debug mode"}
-{"level":"info","ts":"2022-12-13T22:00:51.346+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"79.137.198.139"}
-{"level":"info","ts":"2022-12-13T22:00:51.754+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0746363,"commandTag":"","pid":99648}
-{"level":"info","ts":"2022-12-13T22:03:51.767+0300","caller":"v4@v4.17.2/conn.go:354","msg":"closed connection","pid":99648}

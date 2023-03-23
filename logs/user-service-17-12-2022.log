@@ -1,6 +1,0 @@
-{"level":"info","ts":"2022-12-17T20:21:57.942+0300","caller":"service/utils.go:46","msg":"Lol, it's not debug mode"}
-{"level":"info","ts":"2022-12-17T20:21:57.954+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
-{"level":"info","ts":"2022-12-17T20:21:58.042+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0067215,"commandTag":"","pid":663}
-{"level":"info","ts":"2022-12-17T20:22:15.581+0300","caller":"service/utils.go:37","msg":"It's debug mode"}
-{"level":"info","ts":"2022-12-17T20:22:15.591+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Dialing PostgreSQL server","host":"localhost"}
-{"level":"info","ts":"2022-12-17T20:22:15.624+0300","caller":"v4@v4.17.2/conn.go:354","msg":"Exec","sql":";","args":[],"time":0.0018831,"commandTag":"","pid":664}

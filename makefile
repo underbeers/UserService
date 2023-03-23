@@ -12,13 +12,13 @@ db_unix:
 	docker run -d --name=pgsql -p 5420:5432 -e POSTGRES_PASSWORD='localpassword' -v /var/lib/pgsql/data:/var/lib/pgsql/data postgres
 local:
 	go build -o . cmd/main.go
-	./main --use_db_config
 build_image:
-	docker build -t rodmul/pl_user_service:v4 .
+	docker build -t rodmul/pl_user_service:v5 .
+	docker push rodmul/pl_user_service:v5
 run:
 	docker run -d -p 6001:6001 -e POSTGRES_PASSWORD='DNd72JDSufesosd9' \
 	-e POSTGRES_HOST='79.137.198.139' -e POSTGRES_USER='postgres' \
-	-e POSTGRES_PORT='5432' -e POSTGRES_DB_NAME='user_service' \
+	-e POSTGRES_PORT='58235' -e POSTGRES_DB_NAME='user_service' \
 	-e GATEWAY_PORT='6002' -e GATEWAY_IP='127.0.0.1' \
-	-e GATEWAY_LABEL='127.0.0.1' \
-	--name user_service_container rodmul/pl_user_service:v3
+	-e USERSERVICE_IP='127.0.0.1' -e USERSERVICE_PORT='6001' \
+	--name user_service_container rodmul/pl_user_service:v5

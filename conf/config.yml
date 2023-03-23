@@ -1,8 +1,0 @@
-listen:
-  port: 6001
-  ip: 127.0.0.1
-gateway:
-  ip: 127.0.0.1
-  label: pl_api_gateway
-  port: 6002
-db_version: 3

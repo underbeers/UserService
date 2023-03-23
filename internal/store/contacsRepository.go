@@ -36,7 +36,7 @@ func (r *ContactsRepository) Create(c *models.Contacts) error {
 func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 	if err := r.store.db.QueryRow(
 		tx,
-		`INSERT INTO user_service.public.user_contacts (id_profile, email, mobile_phone, 
+		`INSERT INTO user_contacts (id_profile, email, mobile_phone, 
 			email_subscription, show_phone) VALUES ($1, $2, $3, $4, $5);`,
 		c.ProfileID,
 		c.Email,
@@ -76,7 +76,7 @@ func (r *ContactsRepository) GetByEmailTx(tx *sqlx.Tx, email string) (*models.Co
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
 		`SELECT id, id_profile, email, mobile_phone, show_phone 
-			FROM user_service.public.user_contacts WHERE email = $1`, email)
+			FROM user_contacts WHERE email = $1`, email)
 
 	err := row.StructScan(contacts)
 	if err != nil {
@@ -101,7 +101,7 @@ func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*m
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
 		`SELECT id, id_profile, email, mobile_phone, show_phone 
-			FROM user_service.public.user_contacts WHERE id_profile = $1`, id)
+			FROM user_contacts WHERE id_profile = $1`, id)
 
 	err := row.StructScan(contacts)
 	if err != nil {
@@ -126,7 +126,7 @@ func (r *ContactsRepository) GetByHashIDTx(tx *sqlx.Tx, hash string) (*models.Co
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
 		`SELECT id, id_profile, email, mobile_phone, show_phone, hash_id 
-			FROM user_service.public.user_contacts WHERE hash_id = $1`, hash)
+			FROM user_contacts WHERE hash_id = $1`, hash)
 
 	err := row.StructScan(contacts)
 	if err != nil {
@@ -150,7 +150,7 @@ func (r *ContactsRepository) InsertHashID(profileID uuid.UUID, hash string) erro
 func (r *ContactsRepository) InsertHashIDTx(tx *sqlx.Tx, profileID uuid.UUID, hash string) error {
 	if err := r.store.db.QueryRow(
 		tx,
-		`UPDATE user_service.public.user_contacts SET hash_id = $1 WHERE id_profile = $2`, hash, profileID).Err(); err != nil {
+		`UPDATE user_contacts SET hash_id = $1 WHERE id_profile = $2`, hash, profileID).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
 
@@ -163,7 +163,7 @@ func (r *ContactsRepository) Delete(profileID uuid.UUID) error {
 
 func (r *ContactsRepository) DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error {
 	if err := r.store.db.QueryRow(tx,
-		`DELETE FROM user_service.public.user_contacts WHERE id_profile=$1`, profileID,
+		`DELETE FROM user_contacts WHERE id_profile=$1`, profileID,
 	).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}

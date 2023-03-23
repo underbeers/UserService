@@ -49,7 +49,7 @@ func (r *UserDataRepository) getByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.D
 	data := &models.Data{}
 	row := r.store.db.QueryRow(
 		tx, `SELECT id, id_profile, password_encoded, password_salt 
-FROM user_service.public.user_data WHERE id_profile = $1`, id)
+FROM user_data WHERE id_profile = $1`, id)
 
 	err := row.StructScan(data)
 	if err != nil {
@@ -69,7 +69,7 @@ func (r *UserDataRepository) Delete(profileID uuid.UUID) error {
 }
 
 func (r *UserDataRepository) DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error {
-	if err := r.store.db.QueryRow(tx, `DELETE FROM user_service.public.user_data WHERE id_profile=$1`, profileID).Err(); err != nil {
+	if err := r.store.db.QueryRow(tx, `DELETE FROM user_data WHERE id_profile=$1`, profileID).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
 
@@ -82,7 +82,7 @@ func (r *UserDataRepository) ChangePassword(profileID uuid.UUID, pwd string, sal
 
 func (r *UserDataRepository) ChangePasswordTx(tx *sqlx.Tx, profileID uuid.UUID, pwd string, salt string) error {
 	if err := r.store.db.QueryRow(tx,
-		`UPDATE user_service.public.user_data SET password_encoded = $1, password_salt = $2 WHERE id_profile = $3`,
+		`UPDATE user_data SET password_encoded = $1, password_salt = $2 WHERE id_profile = $3`,
 		pwd, salt, profileID).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}

@@ -55,7 +55,7 @@ func (r *ProfileRepository) GetByUserID(id uuid.UUID) (*models.Profile, error) {
 func (r *ProfileRepository) GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error) {
 	profile := &models.Profile{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, first_name, sur_name, status FROM user_service.public.user_profile WHERE id = $1`, id)
+		`SELECT id, first_name, sur_name, status FROM user_profile WHERE id = $1`, id)
 
 	err := row.StructScan(profile)
 	if err != nil {
@@ -77,7 +77,7 @@ func (r *ProfileRepository) Delete(id uuid.UUID) error {
 }
 
 func (r *ProfileRepository) DeleteTx(tx *sqlx.Tx, id uuid.UUID) error {
-	if err := r.store.db.QueryRow(tx, `DELETE FROM user_service.public.user_profile WHERE id=$1`, id).Err(); err != nil {
+	if err := r.store.db.QueryRow(tx, `DELETE FROM user_profile WHERE id=$1`, id).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
 

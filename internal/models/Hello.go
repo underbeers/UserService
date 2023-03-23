@@ -5,7 +5,6 @@ type Hello struct {
 	Name      string     `json:"name"`
 	Port      string     `json:"port"`
 	IP        string     `json:"ip"`
-	Label     string     `json:"label"`
 	Endpoints []Endpoint `json:"endpoints"`
 }
 

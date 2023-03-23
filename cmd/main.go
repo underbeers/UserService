@@ -7,9 +7,8 @@ import (
 )
 
 func main() {
-	debugMode := flag.Bool("use_db_config", false, "use for starting locally in debug mode")
 	flag.Parse()
-	cfg := config.GetConfig(*debugMode)
+	cfg := config.GetConfig()
 	srv := service.NewService(cfg)
 
 	srv.Logger.Fatal(srv.Start())

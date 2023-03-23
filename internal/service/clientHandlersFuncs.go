@@ -235,10 +235,10 @@ func (srv *service) handleRefreshToken() http.HandlerFunc {
 
 func (srv *service) handleUserInfo() http.HandlerFunc {
 	type Response struct {
-		FirstName   string `json:"firstName"`
-		SurName     string `json:"surName"`
-		MobilePhone string `json:"mobilePhone"`
-		Email       string `json:"email"`
+		UserID    uuid.UUID `json:"UserID"`
+		FirstName string    `json:"firstName"`
+		SurName   string    `json:"surName"`
+		Email     string    `json:"email"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -266,10 +266,10 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		}
 
 		resp := &Response{
-			FirstName:   profile.FirstName,
-			SurName:     profile.SurName,
-			MobilePhone: contacts.MobilePhone,
-			Email:       contacts.Email,
+			UserID:    id,
+			FirstName: profile.FirstName,
+			SurName:   profile.SurName,
+			Email:     contacts.Email,
 		}
 		w.Header().Add("Content-Type", "application/json")
 		userInfoJSON, err := json.Marshal(resp)
@@ -460,20 +460,17 @@ func HelloAPIGateway(srv *service) error {
 	var domain string
 
 	cfg := srv.conf
-	if srv.conf.DebugMode {
-		domain = cfg.Gateway.IP
-	} else {
-		domain = cfg.Gateway.Label
-	}
+	domain = cfg.Gateway.IP
 	gatewayURL, err := url.Parse(
 		protocol + "://" + domain + ":" + cfg.Gateway.Port + baseURL + "hello/")
 	if err != nil {
 		return genErr.NewError(err, ErrConnectAPIGateWay, msg, "can't parse ur for endpoint 'hello/'")
 	}
 
+	srv.Logger.Infof("Connection gateway url %s", gatewayURL.String())
+
 	info := &models.Hello{
 		Name:      "user",
-		Label:     "pl_user_service",
 		IP:        cfg.Listen.IP,
 		Port:      cfg.Listen.Port,
 		Endpoints: nil,
@@ -527,16 +524,13 @@ func pingAPIGateway(srv *service) error {
 
 func gatewayURL(srv *service) (*url.URL, error) {
 	var domain string
-	if srv.conf.DebugMode {
-		domain = srv.conf.Gateway.IP
-	} else {
-		domain = srv.conf.Gateway.Label
-	}
+	domain = srv.conf.Gateway.IP
 	gwURL, err := url.Parse(
 		protocol + "://" + domain + ":" + srv.conf.Gateway.Port + baseURL + "hello/")
 	if err != nil {
 		return nil, genErr.NewError(err, ErrConnectAPIGateWay)
 	}
+	srv.Logger.Infof("Connection gateway url %s", gwURL.String())
 
 	return gwURL, nil
 }
