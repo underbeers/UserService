@@ -235,7 +235,7 @@ func (srv *service) handleRefreshToken() http.HandlerFunc {
 
 func (srv *service) handleUserInfo() http.HandlerFunc {
 	type Response struct {
-		UserID    uuid.UUID `json:"UserID"`
+		UserID    uuid.UUID `json:"userID"`
 		FirstName string    `json:"firstName"`
 		SurName   string    `json:"surName"`
 		Email     string    `json:"email"`
