@@ -49,7 +49,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_user_service:v4
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pl_user_service:v5
 
   deploy:
     name: Deploy
