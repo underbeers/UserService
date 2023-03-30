@@ -462,9 +462,9 @@ func HelloAPIGateway(srv *service) error {
 	cfg := srv.conf
 	domain = cfg.Gateway.IP
 	gatewayURL, err := url.Parse(
-		protocol + "://" + domain + ":" + cfg.Gateway.Port + baseURL + "hello/")
+		protocol + "://" + domain + ":" + cfg.Gateway.Port + baseURL + "hello")
 	if err != nil {
-		return genErr.NewError(err, ErrConnectAPIGateWay, msg, "can't parse ur for endpoint 'hello/'")
+		return genErr.NewError(err, ErrConnectAPIGateWay, msg, "can't parse ur for endpoint 'hello'")
 	}
 
 	srv.Logger.Infof("Connection gateway url %s", gatewayURL.String())
@@ -526,7 +526,7 @@ func gatewayURL(srv *service) (*url.URL, error) {
 	var domain string
 	domain = srv.conf.Gateway.IP
 	gwURL, err := url.Parse(
-		protocol + "://" + domain + ":" + srv.conf.Gateway.Port + baseURL + "hello/")
+		protocol + "://" + domain + ":" + srv.conf.Gateway.Port + baseURL + "hello?service=user&port=" + srv.conf.Listen.Port)
 	if err != nil {
 		return nil, genErr.NewError(err, ErrConnectAPIGateWay)
 	}
