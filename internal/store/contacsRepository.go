@@ -53,7 +53,7 @@ func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 func (r *ContactsRepository) CheckIfSigned(c *models.Contacts) (bool, error) {
 	var signed bool
 	row := r.store.db.QueryRow(nil,
-		`SELECT EXISTS (SELECT * FROM user_service.public.user_contacts WHERE email = $1)`,
+		`SELECT EXISTS (SELECT * FROM user_contacts WHERE email = $1)`,
 		c.Email)
 	if err := row.Scan(&signed); err != nil {
 		err = genErr.NewError(err, ErrScanStructFailed)
