@@ -36,7 +36,7 @@ func (r *ProfileRepository) CreateNewTx(tx *sqlx.Tx, c *models.Profile) error {
 	c.ID = uuid.New()
 	if _, err := r.store.db.Exec(
 		tx,
-		`INSERT INTO user_service.public.user_profile (id, first_name, sur_name, status) VALUES ($1, $2, $3, $4);`,
+		`INSERT INTO user_profile (id, first_name, sur_name, status) VALUES ($1, $2, $3, $4);`,
 		c.ID,
 		c.FirstName,
 		c.SurName,
