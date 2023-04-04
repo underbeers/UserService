@@ -30,7 +30,7 @@ func (r *UserDataRepository) Create(d *models.Data) error {
 func (r *UserDataRepository) CreateTx(tx *sqlx.Tx, d *models.Data) error {
 	if _, err := r.store.db.Exec(
 		tx,
-		"INSERT INTO user_service.public.user_data (id_profile, password_encoded, password_salt) VALUES ($1, $2, $3);",
+		"INSERT INTO user_data (id_profile, password_encoded, password_salt) VALUES ($1, $2, $3);",
 		d.ProfileID,
 		d.PasswordEncoded,
 		d.PasswordSalt,
