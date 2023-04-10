@@ -51,6 +51,11 @@
       "url": "password/reset",
       "protected": false,
       "methods": ["PATCH", "OPTIONS"]
+    },
+    {
+      "url": "user/chatID",
+      "protected": true,
+      "methods": ["PATCH", "OPTIONS"]
     }
   ]
 }

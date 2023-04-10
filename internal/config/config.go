@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const versionDB = 3
+const versionDB = 4
 
 type Config struct {
 	DB        *DB
