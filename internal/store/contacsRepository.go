@@ -27,6 +27,21 @@ type Contacter interface {
 	InsertHashIDTx(tx *sqlx.Tx, profileID uuid.UUID, hash string) error
 	Delete(profileID uuid.UUID) error
 	DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error
+	ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID string) error
+	ChangeChatID(profileID uuid.UUID, chatID string) error
+}
+
+func (r *ContactsRepository) ChangeChatID(profileID uuid.UUID, chatID string) error {
+	return r.ChangeChatIDTx(nil, profileID, chatID)
+}
+
+func (r *ContactsRepository) ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID string) error {
+	if err := r.store.db.QueryRow(tx,
+		`UPDATE user_contacts SET chat_id = $1 WHERE id_profile = $2`, chatID, profileID).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
 }
 
 func (r *ContactsRepository) Create(c *models.Contacts) error {
@@ -36,13 +51,11 @@ func (r *ContactsRepository) Create(c *models.Contacts) error {
 func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 	if err := r.store.db.QueryRow(
 		tx,
-		`INSERT INTO user_contacts (id_profile, email, mobile_phone, 
-			email_subscription, show_phone) VALUES ($1, $2, $3, $4, $5);`,
+		`INSERT INTO user_contacts (id_profile, email, 
+			email_subscription) VALUES ($1, $2, $3);`,
 		c.ProfileID,
 		c.Email,
-		c.MobilePhone,
 		c.EmailSubscription,
-		c.ShowPhone,
 	).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
@@ -75,7 +88,7 @@ func (r *ContactsRepository) GetByEmail(email string) (*models.Contacts, error) 
 func (r *ContactsRepository) GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error) {
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, id_profile, email, mobile_phone, show_phone 
+		`SELECT id, id_profile, email 
 			FROM user_contacts WHERE email = $1`, email)
 
 	err := row.StructScan(contacts)
@@ -100,7 +113,7 @@ func (r *ContactsRepository) GetByUserProfileID(id uuid.UUID) (*models.Contacts,
 func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error) {
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, id_profile, email, mobile_phone, show_phone 
+		`SELECT id, id_profile, email, chat_id
 			FROM user_contacts WHERE id_profile = $1`, id)
 
 	err := row.StructScan(contacts)
@@ -125,7 +138,7 @@ func (r *ContactsRepository) GetByHashID(hash string) (*models.Contacts, error) 
 func (r *ContactsRepository) GetByHashIDTx(tx *sqlx.Tx, hash string) (*models.Contacts, error) {
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, id_profile, email, mobile_phone, show_phone, hash_id 
+		`SELECT id, id_profile, email, hash_id 
 			FROM user_contacts WHERE hash_id = $1`, hash)
 
 	err := row.StructScan(contacts)

@@ -40,6 +40,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"email/code", srv.handleSendEmail()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/refresh", srv.handleForgotPassword()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/reset", srv.handleResetPassword()).Methods(http.MethodPatch, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/chatID", srv.handleUpdateChatID()).Methods(http.MethodPatch, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -77,9 +78,7 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 			Contacts: &models.ContactsEX{
 				Contacts: models.Contacts{
 					Email:             req.Email,
-					MobilePhone:       req.MobilePhone,
 					EmailSubscription: false,
-					ShowPhone:         true,
 				},
 			},
 		}
@@ -239,6 +238,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		FirstName string    `json:"firstName"`
 		SurName   string    `json:"surName"`
 		Email     string    `json:"email"`
+		ChatID    string    `json:"chatID"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -270,6 +270,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			FirstName: profile.FirstName,
 			SurName:   profile.SurName,
 			Email:     contacts.Email,
+			ChatID:    contacts.ChatID,
 		}
 		w.Header().Add("Content-Type", "application/json")
 		userInfoJSON, err := json.Marshal(resp)
@@ -299,6 +300,7 @@ func (srv *service) handleDeleteProfile() http.HandlerFunc {
 		err := user.DeleteUserProfile(userID, srv.store)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
+			return
 		}
 
 		srv.respond(w, http.StatusNoContent, nil)
@@ -348,6 +350,37 @@ func (srv *service) handleChangePassword() http.HandlerFunc {
 
 			return
 		}
+	}
+}
+
+func (srv *service) handleUpdateChatID() http.HandlerFunc {
+	type Req struct {
+		ChatID string `json:"chatID"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := r.Header.Get(userIDAuth)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+
+			return
+		}
+		id, err := uuid.Parse(userID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+		}
+		req := &Req{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+		err = user.ChangeChatID(id, req.ChatID, srv.store)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+			return
+		}
+
+		srv.respond(w, http.StatusOK, nil)
 	}
 }
 
