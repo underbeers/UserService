@@ -13,6 +13,7 @@ import (
 	"git.friends.com/PetLand/UserService/v2/internal/genErr"
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"net/url"
@@ -40,7 +41,8 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"email/code", srv.handleSendEmail()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/refresh", srv.handleForgotPassword()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"password/reset", srv.handleResetPassword()).Methods(http.MethodPatch, http.MethodOptions)
-	srv.router.HandleFunc(baseURL+"user/chatID", srv.handleUpdateChatID()).Methods(http.MethodPatch, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/chat/update", srv.handleUpdateChatID()).Methods(http.MethodPatch, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/{userID}/chatID", srv.handleGetChatID()).Methods(http.MethodGet, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -79,6 +81,8 @@ func (srv *service) handleCreteNewUser() http.HandlerFunc {
 				Contacts: models.Contacts{
 					Email:             req.Email,
 					EmailSubscription: false,
+					SessionID:         "",
+					ChatID:            "",
 				},
 			},
 		}
@@ -232,6 +236,46 @@ func (srv *service) handleRefreshToken() http.HandlerFunc {
 	}
 }
 
+func (srv *service) handleGetChatID() http.HandlerFunc {
+	type Resp struct {
+		ChatID string `json:"chatID"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		userID := vars["userID"]
+
+		id, err := uuid.Parse(userID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+			return
+		}
+		contacts, err := srv.store.Contacts().GetByUserProfileID(id)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		resp := &Resp{
+			ChatID: contacts.ChatID,
+		}
+		userChatID, err := json.Marshal(resp)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		_, err = w.Write(userChatID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		srv.respond(w, http.StatusOK, nil)
+	}
+}
+
 func (srv *service) handleUserInfo() http.HandlerFunc {
 	type Response struct {
 		UserID    uuid.UUID `json:"userID"`
@@ -239,6 +283,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		SurName   string    `json:"surName"`
 		Email     string    `json:"email"`
 		ChatID    string    `json:"chatID"`
+		SessionID string    `json:"sessionID"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -271,8 +316,8 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			SurName:   profile.SurName,
 			Email:     contacts.Email,
 			ChatID:    contacts.ChatID,
+			SessionID: contacts.SessionID,
 		}
-		w.Header().Add("Content-Type", "application/json")
 		userInfoJSON, err := json.Marshal(resp)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
@@ -355,7 +400,8 @@ func (srv *service) handleChangePassword() http.HandlerFunc {
 
 func (srv *service) handleUpdateChatID() http.HandlerFunc {
 	type Req struct {
-		ChatID string `json:"chatID"`
+		ChatID    string `json:"chatID"`
+		SessionID string `json:"sessionID"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -374,7 +420,7 @@ func (srv *service) handleUpdateChatID() http.HandlerFunc {
 			srv.error(w, http.StatusBadRequest, err, r.Context())
 			return
 		}
-		err = user.ChangeChatID(id, req.ChatID, srv.store)
+		err = user.ChangeChatInfo(id, req.ChatID, req.SessionID, srv.store)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 			return

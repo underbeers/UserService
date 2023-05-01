@@ -27,17 +27,17 @@ type Contacter interface {
 	InsertHashIDTx(tx *sqlx.Tx, profileID uuid.UUID, hash string) error
 	Delete(profileID uuid.UUID) error
 	DeleteTx(tx *sqlx.Tx, profileID uuid.UUID) error
-	ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID string) error
-	ChangeChatID(profileID uuid.UUID, chatID string) error
+	ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID, sessionID string) error
+	ChangeChatID(profileID uuid.UUID, chatID, sessionID string) error
 }
 
-func (r *ContactsRepository) ChangeChatID(profileID uuid.UUID, chatID string) error {
-	return r.ChangeChatIDTx(nil, profileID, chatID)
+func (r *ContactsRepository) ChangeChatID(profileID uuid.UUID, chatID, sessionID string) error {
+	return r.ChangeChatIDTx(nil, profileID, chatID, sessionID)
 }
 
-func (r *ContactsRepository) ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID string) error {
+func (r *ContactsRepository) ChangeChatIDTx(tx *sqlx.Tx, profileID uuid.UUID, chatID, sessionID string) error {
 	if err := r.store.db.QueryRow(tx,
-		`UPDATE user_contacts SET chat_id = $1 WHERE id_profile = $2`, chatID, profileID).Err(); err != nil {
+		`UPDATE user_contacts SET chat_user_id = $1, chat_session_id = $2 WHERE id_profile = $3`, chatID, sessionID, profileID).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
 
@@ -52,10 +52,12 @@ func (r *ContactsRepository) CreateTx(tx *sqlx.Tx, c *models.Contacts) error {
 	if err := r.store.db.QueryRow(
 		tx,
 		`INSERT INTO user_contacts (id_profile, email, 
-			email_subscription) VALUES ($1, $2, $3);`,
+			email_subscription, chat_user_id, chat_session_id) VALUES ($1, $2, $3, $4, $5);`,
 		c.ProfileID,
 		c.Email,
 		c.EmailSubscription,
+		c.ChatID,
+		c.SessionID,
 	).Err(); err != nil {
 		return r.store.Rollback(tx, err)
 	}
@@ -113,7 +115,7 @@ func (r *ContactsRepository) GetByUserProfileID(id uuid.UUID) (*models.Contacts,
 func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error) {
 	contacts := &models.Contacts{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, id_profile, email, chat_id
+		`SELECT id, id_profile, email, chat_user_id, chat_session_id
 			FROM user_contacts WHERE id_profile = $1`, id)
 
 	err := row.StructScan(contacts)

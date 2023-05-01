@@ -53,9 +53,14 @@
       "methods": ["PATCH", "OPTIONS"]
     },
     {
-      "url": "user/chatID",
+      "url": "user/chat/update",
       "protected": true,
       "methods": ["PATCH", "OPTIONS"]
+    },
+    {
+      "url": "user/{userID}/chatID",
+      "protected": false,
+      "methods": ["GET", "OPTIONS"]
     }
   ]
 }

@@ -24,8 +24,8 @@ func ChangePassword(data *models.Data, newPassword string, store *store.Store) e
 	return nil
 }
 
-func ChangeChatID(userID uuid.UUID, chatID string, store *store.Store) error {
-	if err := store.Contacts().ChangeChatID(userID, chatID); err != nil {
+func ChangeChatInfo(userID uuid.UUID, chatID string, sessionID string, store *store.Store) error {
+	if err := store.Contacts().ChangeChatID(userID, chatID, sessionID); err != nil {
 		return genErr.NewError(err, core.ErrRepository)
 	}
 

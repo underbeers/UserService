@@ -9,5 +9,6 @@ type Contacts struct {
 	Email             string    `db:"email"`
 	EmailSubscription bool      `db:"email_subscription"`
 	HashID            string    `db:"hash_id"`
-	ChatID            string    `db:"chat_id"`
+	ChatID            string    `db:"chat_user_id"`
+	SessionID         string    `db:"chat_session_id"`
 }
