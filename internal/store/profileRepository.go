@@ -19,6 +19,8 @@ type Profiler interface {
 	GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error)
 	Delete(id uuid.UUID) error
 	DeleteTx(tx *sqlx.Tx, id uuid.UUID) error
+	SetImage(id uuid.UUID, imageLink string) error
+	SetImageTx(tx *sqlx.Tx, id uuid.UUID, imageLink string) error
 }
 
 type Profile struct {
@@ -26,6 +28,18 @@ type Profile struct {
 	FirstName string    `db:"first_name"`
 	SurName   string    `db:"sur_name"`
 	Status    string    `db:"status"`
+}
+
+func (r *ProfileRepository) SetImage(id uuid.UUID, imageLink string) error {
+	return r.SetImageTx(nil, id, imageLink)
+}
+
+func (r *ProfileRepository) SetImageTx(tx *sqlx.Tx, id uuid.UUID, imageLink string) error {
+	if err := r.store.db.QueryRow(tx, `UPDATE user_profile SET image_link = $1 WHERE id = $2`, imageLink, id).Err(); err != nil {
+		return r.store.Rollback(tx, err)
+	}
+
+	return nil
 }
 
 func (r *ProfileRepository) CreateNew(c *models.Profile) error {

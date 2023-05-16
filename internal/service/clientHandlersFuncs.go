@@ -43,6 +43,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"password/reset", srv.handleResetPassword()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/chat/update", srv.handleUpdateChatID()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/{userID}/chatID", srv.handleGetChatID()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/image/set", srv.handleSetUserImage()).Methods(http.MethodPost, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -272,6 +273,42 @@ func (srv *service) handleGetChatID() http.HandlerFunc {
 
 			return
 		}
+		srv.respond(w, http.StatusOK, nil)
+	}
+}
+
+func (srv *service) handleSetUserImage() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		type Request struct {
+			ImageLink string
+		}
+
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+
+			return
+		}
+
+		userID := r.Header.Get(userIDAuth)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+
+			return
+		}
+
+		id, err := uuid.Parse(userID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+		}
+
+		err = user.SetImage(id, req.ImageLink, srv.store)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+
+			return
+		}
+
 		srv.respond(w, http.StatusOK, nil)
 	}
 }
