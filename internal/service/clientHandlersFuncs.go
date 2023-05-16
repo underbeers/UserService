@@ -333,6 +333,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		Email     string    `json:"email"`
 		ChatID    string    `json:"chatID"`
 		SessionID string    `json:"sessionID"`
+		ImageLink string    `json:"imageLink"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -366,6 +367,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			Email:     contacts.Email,
 			ChatID:    contacts.ChatID,
 			SessionID: contacts.SessionID,
+			ImageLink: profile.ImageLink,
 		}
 		userInfoJSON, err := json.Marshal(resp)
 		if err != nil {

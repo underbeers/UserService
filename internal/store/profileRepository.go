@@ -69,7 +69,7 @@ func (r *ProfileRepository) GetByUserID(id uuid.UUID) (*models.Profile, error) {
 func (r *ProfileRepository) GetByUserIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Profile, error) {
 	profile := &models.Profile{}
 	row := r.store.db.QueryRow(tx,
-		`SELECT id, first_name, sur_name, status FROM user_profile WHERE id = $1`, id)
+		`SELECT id, first_name, sur_name, status, image_link FROM user_profile WHERE id = $1`, id)
 
 	err := row.StructScan(profile)
 	if err != nil {
