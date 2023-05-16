@@ -14,6 +14,7 @@ import (
 	"git.friends.com/PetLand/UserService/v2/internal/models"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -279,13 +280,24 @@ func (srv *service) handleGetChatID() http.HandlerFunc {
 
 func (srv *service) handleSetUserImage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		type Data struct {
+			Origin string `json:"origin"`
+		}
+
 		type Request struct {
-			ImageLink string
+			StatusCode int  `json:"statusCode"`
+			Data       Data `json:"data"`
 		}
 
 		req := &Request{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			srv.error(w, http.StatusBadRequest, err, r.Context())
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		if err := json.Unmarshal(body, req); err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
 			return
 		}
@@ -302,7 +314,7 @@ func (srv *service) handleSetUserImage() http.HandlerFunc {
 			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
 		}
 
-		err = user.SetImage(id, req.ImageLink, srv.store)
+		err = user.SetImage(id, req.Data.Origin, srv.store)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
 
