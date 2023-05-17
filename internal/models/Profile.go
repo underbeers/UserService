@@ -7,5 +7,5 @@ type Profile struct {
 	FirstName string    `db:"first_name"`
 	SurName   string    `db:"sur_name"`
 	Status    int       `db:"status"`
-	ImageLink string    `db:"image_link"`
+	ImageLink *string   `db:"image_link"`
 }

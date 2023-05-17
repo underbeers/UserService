@@ -360,6 +360,11 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			return
 		}
 
+		temp := ""
+		if profile.ImageLink != nil {
+			temp = *profile.ImageLink
+		}
+
 		resp := &Response{
 			UserID:    id,
 			FirstName: profile.FirstName,
@@ -367,7 +372,7 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			Email:     contacts.Email,
 			ChatID:    contacts.ChatID,
 			SessionID: contacts.SessionID,
-			ImageLink: profile.ImageLink,
+			ImageLink: temp,
 		}
 		userInfoJSON, err := json.Marshal(resp)
 		if err != nil {
