@@ -28,6 +28,11 @@
       "methods": ["GET", "OPTIONS"]
     },
     {
+      "url": "user/infoByID",
+      "protected": false,
+      "methods": ["GET", "OPTIONS"]
+    },
+    {
       "url": "email/code",
       "protected": false,
       "methods": ["POST", "OPTIONS"]

@@ -36,6 +36,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"login", srv.handleLoginUser()).Methods(http.MethodPost, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"login/token", srv.handleRefreshToken()).Methods(http.MethodGet, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/info", srv.handleUserInfo()).Methods(http.MethodGet, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/infoByID", srv.handleUserInfoByID()).Methods(http.MethodGet, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/delete", srv.handleDeleteProfile()).Methods(http.MethodDelete, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/password/change", srv.handleChangePassword()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"endpoint-info/", srv.handleInfo()).Methods(http.MethodGet)
@@ -381,6 +382,78 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 			return
 		}
 		_, err = w.Write(userInfoJSON)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		srv.respond(w, http.StatusOK, nil)
+	}
+}
+
+func (srv *service) handleUserInfoByID() http.HandlerFunc {
+	type Request struct {
+		UserID string `json:"userID"`
+	}
+
+	type Response struct {
+		UserID    uuid.UUID `json:"userID"`
+		FirstName string    `json:"firstName"`
+		SurName   string    `json:"surName"`
+		Email     string    `json:"email"`
+		ChatID    string    `json:"chatID"`
+		SessionID string    `json:"sessionID"`
+		ImageLink string    `json:"imageLink"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		req := &Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+
+		id, err := uuid.Parse(req.UserID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+		}
+
+		contacts, err := srv.store.Contacts().GetByUserProfileID(id)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		profile, err := srv.store.Profile().GetByUserID(id)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+
+		temp := ""
+		if profile.ImageLink != nil {
+			temp = *profile.ImageLink
+		}
+
+		resp := &Response{
+			UserID:    id,
+			FirstName: profile.FirstName,
+			SurName:   profile.SurName,
+			Email:     contacts.Email,
+			ChatID:    contacts.ChatID,
+			SessionID: contacts.SessionID,
+			ImageLink: temp,
+		}
+		w.Header().Add("Content-Type", "application/json")
+		userInfoJSON, err := json.Marshal(resp)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+			return
+		}
+		_, err = w.Write(userInfoJSON) //??(Скорее всего не так)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
