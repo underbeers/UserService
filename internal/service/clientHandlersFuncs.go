@@ -282,7 +282,7 @@ func (srv *service) handleGetChatID() http.HandlerFunc {
 func (srv *service) handleSetUserImage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		type Data struct {
-			Origin string `json:"origin"`
+			Original string `json:"original"`
 		}
 
 		type Request struct {
@@ -315,7 +315,7 @@ func (srv *service) handleSetUserImage() http.HandlerFunc {
 			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
 		}
 
-		err = user.SetImage(id, req.Data.Origin, srv.store)
+		err = user.SetImage(id, req.Data.Original, srv.store)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
 
