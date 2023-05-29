@@ -1,3 +1,3 @@
 {
-  "urls": ["helloMessage", "registration/new", "login", "email/code", "password/refresh", "password/reset", "user/{userID}/chatID"]
+  "urls": ["helloMessage", "registration/new", "login", "email/code", "password/refresh", "password/reset", "user/{userID}/chatID", "user/infoByID"]
 }

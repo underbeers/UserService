@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"git.friends.com/PetLand/UserService/v2/internal/core"
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
@@ -392,9 +393,6 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 }
 
 func (srv *service) handleUserInfoByID() http.HandlerFunc {
-	type Request struct {
-		UserID string `json:"userID"`
-	}
 
 	type Response struct {
 		UserID    uuid.UUID `json:"userID"`
@@ -402,19 +400,20 @@ func (srv *service) handleUserInfoByID() http.HandlerFunc {
 		SurName   string    `json:"surName"`
 		Email     string    `json:"email"`
 		ChatID    string    `json:"chatID"`
-		SessionID string    `json:"sessionID"`
 		ImageLink string    `json:"imageLink"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		userID := query.Get("userID")
+		//userID := r.Header.Get(userIDAuth)
+		fmt.Println(userID)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
 
-		req := &Request{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			srv.error(w, http.StatusBadRequest, err, r.Context())
 			return
 		}
-
-		id, err := uuid.Parse(req.UserID)
+		id, err := uuid.Parse(userID)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
 		}
@@ -443,7 +442,6 @@ func (srv *service) handleUserInfoByID() http.HandlerFunc {
 			SurName:   profile.SurName,
 			Email:     contacts.Email,
 			ChatID:    contacts.ChatID,
-			SessionID: contacts.SessionID,
 			ImageLink: temp,
 		}
 		w.Header().Add("Content-Type", "application/json")
@@ -453,7 +451,7 @@ func (srv *service) handleUserInfoByID() http.HandlerFunc {
 
 			return
 		}
-		_, err = w.Write(userInfoJSON) //??(Скорее всего не так)
+		_, err = w.Write(userInfoJSON)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 
