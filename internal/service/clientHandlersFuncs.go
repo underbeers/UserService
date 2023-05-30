@@ -287,8 +287,9 @@ func (srv *service) handleSetUserImage() http.HandlerFunc {
 		}
 
 		type Request struct {
-			StatusCode int  `json:"statusCode"`
-			Data       Data `json:"data"`
+			StatusCode  int    `json:"statusCode"`
+			Data        Data   `json:"data"`
+			AccessToken string `json:"accessToken"`
 		}
 
 		req := &Request{}
@@ -304,12 +305,7 @@ func (srv *service) handleSetUserImage() http.HandlerFunc {
 			return
 		}
 
-		userID := r.Header.Get(userIDAuth)
-		if len(userID) == 0 {
-			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
-
-			return
-		}
+		userID := req.AccessToken
 
 		id, err := uuid.Parse(userID)
 		if err != nil {
