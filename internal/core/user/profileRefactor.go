@@ -31,3 +31,12 @@ func ChangeChatInfo(userID uuid.UUID, chatID string, sessionID string, store *st
 
 	return nil
 }
+
+func ChangeDescriptionInfo(userID uuid.UUID, description string, store *store.Store) error {
+	if err := store.Profile().SetDescription(userID, description); err != nil {
+		return genErr.NewError(err, core.ErrRepository)
+	}
+
+	return nil
+
+}

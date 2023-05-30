@@ -21,6 +21,8 @@ type Contacter interface {
 	GetByEmailTx(tx *sqlx.Tx, email string) (*models.Contacts, error)
 	GetByUserProfileID(id uuid.UUID) (*models.Contacts, error)
 	GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*models.Contacts, error)
+	GetByUserChatID(chatID string) (*models.Contacts, error)
+	GetByUserChatIDTx(tx *sqlx.Tx, chatID string) (*models.Contacts, error)
 	GetByHashID(hash string) (*models.Contacts, error)
 	GetByHashIDTx(tx *sqlx.Tx, hash string) (*models.Contacts, error)
 	InsertHashID(profileID uuid.UUID, hash string) error
@@ -122,6 +124,31 @@ func (r *ContactsRepository) GetByUserProfileIDTx(tx *sqlx.Tx, id uuid.UUID) (*m
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = genErr.NewError(err, ErrNotFound, "id", id)
+
+			return nil, err
+		}
+		err = genErr.NewError(err, ErrScanStructFailed)
+
+		return nil, r.store.Rollback(tx, err)
+	}
+
+	return contacts, nil
+}
+
+func (r *ContactsRepository) GetByUserChatID(chatID string) (*models.Contacts, error) {
+	return r.GetByUserChatIDTx(nil, chatID)
+}
+
+func (r *ContactsRepository) GetByUserChatIDTx(tx *sqlx.Tx, chatID string) (*models.Contacts, error) {
+	contacts := &models.Contacts{}
+	row := r.store.db.QueryRow(tx,
+		`SELECT id, id_profile, email, chat_user_id, chat_session_id
+			FROM user_contacts WHERE chat_user_id = $1`, chatID)
+
+	err := row.StructScan(contacts)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = genErr.NewError(err, ErrNotFound, "chat_user_id", chatID)
 
 			return nil, err
 		}

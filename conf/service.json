@@ -71,6 +71,11 @@
       "url": "user/image/set",
       "protected": false,
       "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "url": "user/description/update",
+      "protected": true,
+      "methods": ["PATCH", "OPTIONS"]
     }
   ]
 }

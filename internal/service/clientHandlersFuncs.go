@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"git.friends.com/PetLand/UserService/v2/internal/core"
 	"git.friends.com/PetLand/UserService/v2/internal/core/login"
 	"git.friends.com/PetLand/UserService/v2/internal/core/register"
@@ -47,6 +46,7 @@ func (srv *service) registerClientHandlers() {
 	srv.router.HandleFunc(baseURL+"user/chat/update", srv.handleUpdateChatID()).Methods(http.MethodPatch, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/{userID}/chatID", srv.handleGetChatID()).Methods(http.MethodGet, http.MethodOptions)
 	srv.router.HandleFunc(baseURL+"user/image/set", srv.handleSetUserImage()).Methods(http.MethodPost, http.MethodOptions)
+	srv.router.HandleFunc(baseURL+"user/description/update", srv.handleUpdateDescription()).Methods(http.MethodPatch, http.MethodOptions)
 }
 
 func (srv *service) handleHelloMessage() http.HandlerFunc {
@@ -325,13 +325,15 @@ func (srv *service) handleSetUserImage() http.HandlerFunc {
 
 func (srv *service) handleUserInfo() http.HandlerFunc {
 	type Response struct {
-		UserID    uuid.UUID `json:"userID"`
-		FirstName string    `json:"firstName"`
-		SurName   string    `json:"surName"`
-		Email     string    `json:"email"`
-		ChatID    string    `json:"chatID"`
-		SessionID string    `json:"sessionID"`
-		ImageLink string    `json:"imageLink"`
+		UserID           uuid.UUID `json:"userID"`
+		FirstName        string    `json:"firstName"`
+		SurName          string    `json:"surName"`
+		Email            string    `json:"email"`
+		ChatID           string    `json:"chatID"`
+		SessionID        string    `json:"sessionID"`
+		ImageLink        string    `json:"imageLink"`
+		DateRegistration time.Time `json:"date_registration"`
+		Description      string    `json:"description"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -364,13 +366,15 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 		}
 
 		resp := &Response{
-			UserID:    id,
-			FirstName: profile.FirstName,
-			SurName:   profile.SurName,
-			Email:     contacts.Email,
-			ChatID:    contacts.ChatID,
-			SessionID: contacts.SessionID,
-			ImageLink: temp,
+			UserID:           id,
+			FirstName:        profile.FirstName,
+			SurName:          profile.SurName,
+			Email:            contacts.Email,
+			ChatID:           contacts.ChatID,
+			SessionID:        contacts.SessionID,
+			ImageLink:        temp,
+			DateRegistration: profile.DateRegistration,
+			Description:      profile.Description,
 		}
 		userInfoJSON, err := json.Marshal(resp)
 		if err != nil {
@@ -391,55 +395,102 @@ func (srv *service) handleUserInfo() http.HandlerFunc {
 func (srv *service) handleUserInfoByID() http.HandlerFunc {
 
 	type Response struct {
-		UserID    uuid.UUID `json:"userID"`
-		FirstName string    `json:"firstName"`
-		SurName   string    `json:"surName"`
-		Email     string    `json:"email"`
-		ChatID    string    `json:"chatID"`
-		ImageLink string    `json:"imageLink"`
+		UserID           uuid.UUID `json:"userID"`
+		FirstName        string    `json:"firstName"`
+		SurName          string    `json:"surName"`
+		Email            string    `json:"email"`
+		ChatID           string    `json:"chatID"`
+		ImageLink        string    `json:"imageLink"`
+		DateRegistration time.Time `json:"date_registration"`
+		Description      string    `json:"description"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
-		userID := query.Get("userID")
-		//userID := r.Header.Get(userIDAuth)
-		fmt.Println(userID)
-		if len(userID) == 0 {
-			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+		resp := &Response{}
+		if query.Has("userID") {
+			userID := query.Get("userID")
+			if len(userID) == 0 {
+				srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
 
-			return
-		}
-		id, err := uuid.Parse(userID)
-		if err != nil {
-			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+				return
+			}
+			id, err := uuid.Parse(userID)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+			}
+
+			contacts, err := srv.store.Contacts().GetByUserProfileID(id)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+				return
+			}
+			profile, err := srv.store.Profile().GetByUserID(id)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+				return
+			}
+
+			temp := ""
+			if profile.ImageLink != nil {
+				temp = *profile.ImageLink
+			}
+
+			resp = &Response{
+				UserID:           id,
+				FirstName:        profile.FirstName,
+				SurName:          profile.SurName,
+				Email:            contacts.Email,
+				ChatID:           contacts.ChatID,
+				ImageLink:        temp,
+				DateRegistration: profile.DateRegistration,
+				Description:      profile.Description,
+			}
+
 		}
 
-		contacts, err := srv.store.Contacts().GetByUserProfileID(id)
-		if err != nil {
-			srv.error(w, http.StatusInternalServerError, err, r.Context())
+		if query.Has("chatID") {
+			chatID := query.Get("chatID")
+			if len(chatID) == 0 {
+				srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
 
-			return
-		}
-		profile, err := srv.store.Profile().GetByUserID(id)
-		if err != nil {
-			srv.error(w, http.StatusInternalServerError, err, r.Context())
+				return
+			}
 
-			return
+			contacts, err := srv.store.Contacts().GetByUserChatID(chatID)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+				return
+			}
+
+			profile, err := srv.store.Profile().GetByUserID(contacts.ProfileID)
+			if err != nil {
+				srv.error(w, http.StatusInternalServerError, err, r.Context())
+
+				return
+			}
+
+			temp := ""
+			if profile.ImageLink != nil {
+				temp = *profile.ImageLink
+			}
+
+			resp = &Response{
+				UserID:           contacts.ProfileID,
+				FirstName:        profile.FirstName,
+				SurName:          profile.SurName,
+				Email:            contacts.Email,
+				ChatID:           contacts.ChatID,
+				ImageLink:        temp,
+				DateRegistration: profile.DateRegistration,
+				Description:      profile.Description,
+			}
+
 		}
 
-		temp := ""
-		if profile.ImageLink != nil {
-			temp = *profile.ImageLink
-		}
-
-		resp := &Response{
-			UserID:    id,
-			FirstName: profile.FirstName,
-			SurName:   profile.SurName,
-			Email:     contacts.Email,
-			ChatID:    contacts.ChatID,
-			ImageLink: temp,
-		}
 		w.Header().Add("Content-Type", "application/json")
 		userInfoJSON, err := json.Marshal(resp)
 		if err != nil {
@@ -544,6 +595,37 @@ func (srv *service) handleUpdateChatID() http.HandlerFunc {
 			return
 		}
 		err = user.ChangeChatInfo(id, req.ChatID, req.SessionID, srv.store)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, err, r.Context())
+			return
+		}
+
+		srv.respond(w, http.StatusOK, nil)
+	}
+}
+
+func (srv *service) handleUpdateDescription() http.HandlerFunc {
+	type Req struct {
+		Description string `json:"description"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := r.Header.Get(userIDAuth)
+		if len(userID) == 0 {
+			srv.warning(w, http.StatusUnauthorized, ErrInvalidHeader)
+
+			return
+		}
+		id, err := uuid.Parse(userID)
+		if err != nil {
+			srv.error(w, http.StatusInternalServerError, ErrParams, r.Context())
+		}
+		req := &Req{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			srv.error(w, http.StatusBadRequest, err, r.Context())
+			return
+		}
+		err = user.ChangeDescriptionInfo(id, req.Description, srv.store)
 		if err != nil {
 			srv.error(w, http.StatusInternalServerError, err, r.Context())
 			return
