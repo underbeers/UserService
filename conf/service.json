@@ -66,6 +66,11 @@
       "url": "user/{userID}/chatID",
       "protected": false,
       "methods": ["GET", "OPTIONS"]
+    },
+    {
+      "url": "user/image/set",
+      "protected": false,
+      "methods": ["POST", "OPTIONS"]
     }
   ]
 }
